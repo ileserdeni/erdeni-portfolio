@@ -57,7 +57,7 @@ export const projects = [
       'Optics',
       'CAD',
     ],
-    thumbnail: '/projects/microlense1.JPG',
+    thumbnail: '/projects/Mircolense_1.JPG',
     images: [
       {
         src: '/projects/microlense1.JPG',
@@ -68,6 +68,26 @@ export const projects = [
         src: '/projects/microlense2.JPG',
         caption:
           'Using a high resolution microscope to evaluate the fabrication quality of microstructures/microlenses.',
+      },
+      {
+        src: '/projects/Mircolense_1.JPG',
+        caption:
+          'Open chamber of the Nanoscribe Photonic Professional GT during microlens fabrication setup.',
+      },
+      {
+        src: '/projects/Microlense_2.JPG',
+        caption:
+          'Fabricated microscale structure on a glass substrate, shown next to a finger for scale.',
+      },
+      {
+        src: '/projects/Microlense_3.JPG',
+        caption:
+          'Nanoscribe Photonic Professional GT system used for two-photon polymerization microlens fabrication.',
+      },
+      {
+        src: '/projects/Microlense_4.JPG',
+        caption:
+          'NanoWrite interface and live camera feed during a Nanoscribe multilens print job.',
       },
     ],
     role: 'Research Assistant — Boston University College of Engineering',
