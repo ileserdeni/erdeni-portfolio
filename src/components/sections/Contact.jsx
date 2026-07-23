@@ -52,14 +52,14 @@ export default function Contact() {
             ))}
 
             <Button
-              href="/resume2.pdf"
+              href="/Erdeni%20Iles-Resume%20v16.pdf"
               variant="secondary"
               className="mt-2 w-full justify-center"
             >
               Download Resume
             </Button>
             <p className="text-center font-mono text-[11px] text-zinc-600">
-              Place resume PDF at public/resume2.pdf
+              Place resume PDF at public/Erdeni Iles-Resume v16.pdf
             </p>
           </div>
         </div>
