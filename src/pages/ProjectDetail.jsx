@@ -8,6 +8,27 @@ import GalleryFigure from '../components/ui/GalleryFigure';
 import ProjectVideo from '../components/ui/ProjectVideo';
 import ProjectCaseStudy from '../components/projects/ProjectCaseStudy';
 
+function Section({ label, children }) {
+  if (!children) return null;
+  return (
+    <section className="mt-12 max-w-3xl">
+      <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
+        {label}
+      </h2>
+      <div className="mt-4 space-y-4 text-base leading-relaxed text-muted sm:text-lg">
+        {children}
+      </div>
+    </section>
+  );
+}
+
+function Paragraphs({ text }) {
+  if (!text) return null;
+  return text.split('\n\n').map((paragraph) => (
+    <p key={paragraph.slice(0, 48)}>{paragraph}</p>
+  ));
+}
+
 export default function ProjectDetail() {
   const { slug } = useParams();
   const project = getProjectBySlug(slug);
@@ -44,21 +65,14 @@ export default function ProjectDetail() {
     project.images?.length > 0 ? project.images : [{ src: project.thumbnail, caption: null }],
   );
 
-  const heroCount = project.galleryHeroCount ?? 0;
-  const heroImages =
-    heroCount > 0 ? galleryImages.slice(0, heroCount) : [];
-  const restImages =
-    heroCount > 0 ? galleryImages.slice(heroCount) : galleryImages;
+  const videos = project.videos?.length
+    ? project.videos
+    : project.video
+      ? [{ src: project.video, label: 'Project video' }]
+      : [];
 
-  const renderGalleryFigure = (image, index, titleSuffix) => (
-    <GalleryFigure
-      key={`${image.src}-${index}`}
-      src={image.src}
-      caption={image.caption}
-      title={`${project.title} — ${titleSuffix}`}
-      className={galleryImages.length === 1 && heroCount === 0 ? 'sm:col-span-2' : ''}
-    />
-  );
+  const hasEngineeringSections =
+    project.problem || project.decisions || project.build || project.result;
 
   return (
     <motion.article
@@ -82,7 +96,7 @@ export default function ProjectDetail() {
       </h1>
 
       {(project.role || project.timeline) && (
-        <div className="mt-6 flex flex-wrap gap-4 text-sm text-zinc-500">
+        <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-zinc-500">
           {project.role && <p>{project.role}</p>}
           {project.timeline && (
             <p className="font-mono text-xs text-zinc-600">{project.timeline}</p>
@@ -90,89 +104,72 @@ export default function ProjectDetail() {
         </div>
       )}
 
-      <div className="mt-10">
-        <p className="mb-4 font-mono text-xs uppercase tracking-[0.2em] text-zinc-600">
-          Gallery
-        </p>
-        {heroCount > 0 ? (
-          <>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {heroImages.map((image, index) =>
-                renderGalleryFigure(image, index, index + 1),
-              )}
-            </div>
+      <p className="mt-8 max-w-3xl text-lg leading-relaxed text-zinc-300 sm:text-xl">
+        {project.description}
+      </p>
 
-            {project.codeNote && (
-              <div className="mt-4 rounded-xl border border-border bg-surface-raised p-5">
-                <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
-                  Code overview
-                </p>
-                <p className="mt-3 text-sm leading-relaxed text-muted sm:text-base">
-                  {project.codeNote}
-                </p>
-              </div>
-            )}
-
-            {restImages.length > 0 && (
-              <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                {restImages.map((image, index) =>
-                  renderGalleryFigure(image, heroCount + index, heroCount + index + 1),
-                )}
-              </div>
-            )}
-          </>
-        ) : (
-          <div className="grid gap-4 sm:grid-cols-2">
-            {galleryImages.map((image, index) => (
-              <div key={`${image.src}-${index}`} className="contents">
-                {renderGalleryFigure(image, index, index + 1)}
-                {index === 0 && project.codeNote && (
-                  <div className="rounded-xl border border-border bg-surface-raised p-5 sm:col-span-2">
-                    <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
-                      Code overview
-                    </p>
-                    <p className="mt-3 text-sm leading-relaxed text-muted sm:text-base">
-                      {project.codeNote}
-                    </p>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {project.video && (
-        <div className="mt-8">
-          <ProjectVideo src={project.video} label="Project video" />
+      {videos.length > 0 && (
+        <div className="mt-10 space-y-6">
+          {videos.map((item) => (
+            <ProjectVideo key={item.src} src={item.src} label={item.label} />
+          ))}
         </div>
       )}
 
-      <div className="mt-12 max-w-3xl space-y-5">
-        {project.detailedDescription.split('\n\n').map((paragraph) => (
-          <p
-            key={paragraph.slice(0, 40)}
-            className="text-base leading-relaxed text-muted sm:text-lg"
-          >
-            {paragraph}
-          </p>
-        ))}
-      </div>
+      {hasEngineeringSections ? (
+        <>
+          <Section label="Problem">
+            <Paragraphs text={project.problem} />
+          </Section>
+          <Section label="Decisions">
+            <Paragraphs text={project.decisions} />
+          </Section>
+          <Section label="Build">
+            <Paragraphs text={project.build} />
+          </Section>
+          <Section label="Result">
+            <Paragraphs text={project.result} />
+          </Section>
+        </>
+      ) : (
+        <div className="mt-12 max-w-3xl space-y-5">
+          <Paragraphs text={project.detailedDescription} />
+        </div>
+      )}
 
-      {project.process && (
-        <div className="mt-12 max-w-3xl rounded-xl border border-border bg-surface-raised p-6">
-          <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
-            Process & Notes
-          </h2>
-          <p className="mt-4 text-sm leading-relaxed text-muted sm:text-base">
-            {project.process}
+      {galleryImages.length > 0 && (
+        <div className="mt-14">
+          <p className="mb-4 font-mono text-xs uppercase tracking-[0.2em] text-zinc-600">
+            Evidence
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {galleryImages.map((image, index) => (
+              <GalleryFigure
+                key={`${image.src}-${index}`}
+                src={image.src}
+                caption={image.caption}
+                title={`${project.title} — ${index + 1}`}
+                className={galleryImages.length === 1 ? 'sm:col-span-2' : ''}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {project.codeNote && (
+        <div className="mt-10 max-w-3xl rounded-xl border border-border bg-surface-raised p-5">
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
+            Notes
+          </p>
+          <p className="mt-3 text-sm leading-relaxed text-muted sm:text-base">
+            {project.codeNote}
           </p>
         </div>
       )}
 
       <div className="mt-12">
         <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-zinc-600">
-          Tools & Skills
+          Tools
         </h2>
         <div className="mt-4 flex flex-wrap gap-1.5">
           {project.tools.map((tool) => (

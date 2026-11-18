@@ -1,17 +1,274 @@
 export const projects = [
   {
+    id: 'heimdall',
+    slug: 'heimdall',
+    title: 'Heimdall',
+    category: 'Hackathon · Search & Rescue · Embedded',
+    description:
+      'Offline search-and-rescue station that finds coded acoustic beacons without GPS or cellular, then aims a thermal camera at the highest-priority victim. Finalist — Top 5 of 32 at Code Metal Forge.',
+    problem:
+      'In a collapsed building or wildfire zone, phones may have no signal and GPS can be useless indoors. Rescuers still need a way to find people who can make sound — and aim a thermal camera at the right direction without guessing.',
+    decisions:
+      'We skipped cloud services and cellular entirely. Victims emit coded acoustic chirps from a phone web app or a small ESP32 Tag. The station listens with a four-mic array, estimates bearing, and drives a servo pan-tilt so the thermal camera points at the selected source.\n\nI owned hardware integration: Raspberry Pi 5, mic array, thermal camera, pan-tilt, soldering, cable routing, and calibration for a live demo that had to survive being picked up and walked around.',
+    build:
+      'The wearable station packs the Pi, glowing mic array, controller board, and thermal head onto a handheld frame. Operator UI runs over local Wi-Fi. Beacon phones expose SEND SOS plus floor, relay, and fall-detection settings so the demo could show multi-victim priority without pretending we had cell towers.',
+    result:
+      'At 4 m in calibration tests, the station decoded 95% of acoustic signals and estimated an 89.5° mean bearing for a source placed at 90°. That was enough for judges to watch the thermal head swing onto the correct person live.',
+    tools: [
+      'Raspberry Pi 5',
+      'reSpeaker 4-mic',
+      'Thermal camera',
+      'Servo pan-tilt',
+      'ESP32',
+      'Python',
+      'FastAPI',
+    ],
+    thumbnail: '/projects/heimdall-wearable.jpg',
+    videos: [
+      {
+        src: '/projects/heimdall/demo.mp4',
+        label: 'Live demo — acoustic decode and thermal pan-tilt',
+      },
+    ],
+    images: [
+      {
+        src: '/projects/heimdall-wearable.jpg',
+        caption:
+          'Wearable station: Pi, mic array, and thermal pan-tilt on a handheld frame built for walking demos.',
+      },
+      {
+        src: '/projects/heimdall-station-hand.jpg',
+        caption:
+          'Layout with Pi case, mic array, controller board, breadboard, and thermal camera.',
+      },
+      {
+        src: '/projects/heimdall-sos-ui.jpg',
+        caption: 'Victim beacon UI — SEND SOS with condition and people-with-you inputs.',
+      },
+      {
+        src: '/projects/heimdall-operator-ui.jpg',
+        caption: 'Operator view over local Wi-Fi: victims, bearing, and thermal feed.',
+      },
+      {
+        src: '/projects/heimdall-tag-board.jpg',
+        caption: 'ESP32 Tag prototype with Grove sensors, SOS button, and touch pads.',
+      },
+    ],
+    role: 'Hardware integration lead — Team 31',
+    timeline: 'Fall 2026 · Code Metal Forge · Finalist (Top 5 of 32)',
+  },
+  {
+    id: 'cordganizer',
+    slug: 'cordganizer',
+    title: 'Cordganizer',
+    category: 'CIM · Robotics · Production Planning',
+    description:
+      'Automated cell that machines and assembles a two-piece Cordganizer from raw stock using UR arms, Haas mills, AGVs, and conveyor — with BUMES scripts timed to keep the bottleneck mill fed.',
+    problem:
+      'In BU’s ADML cell, lid and body blanks have to move through inventory, conveyor, robot tenders (Mary / Edie / Rosie), two mill programs, and final assembly without deadlocking shared resources. Idle mill time kills throughput; releasing a robot too early collides with an unfinished cut.',
+    decisions:
+      'Lid (A/C) and body (B/D) run as separate parallel processes. Within each process, tasks stay sequential; across processes they overlap after startupTasksComplete() so the next lot can enter while the first is still machining.\n\nResource seize/release is explicit: seize Mary only for load/unload, release her during the mill cut so she can move a finished lid while Cayenne is still cutting. Unload waits on the mill program finishing — annotated as a hard safety boundary in the BUMES script.\n\nRouting analysis rounded steps to 10 s, counted empty pallets as WIP, and flagged body machining at 340 s / utilization 1.00 as the cell bottleneck.',
+    build:
+      'I wrote and annotated BUMES scripts for lid and body: AGV + Rosie move empty pallets onto the conveyor, Mary/Edie pull blanks from gravity feeders, load Haas toolpaths (MakeLid / MakeBody), unload, stage inventory, and hand off to Rosie for AssembleAToB.\n\nEpoch-timestamped BUMES reports logged every resourceSeize / urDashboard call so we could measure task times against the routing diagram instead of guessing where time went.',
+    result:
+      'Body machining was the clear bottleneck (340 s, utilization 1.0). Assembly took 130 s once both parts arrived. The cell produced finished Cordganizers through coordinated mill tending and robotic assembly rather than one-off teleop demos.',
+    tools: [
+      'BUMES',
+      'Universal Robots',
+      'Haas CNC',
+      'AGV / conveyor',
+      'Fusion 360 CAM',
+      'Routing analysis',
+    ],
+    thumbnail: '/projects/cordganizer/thumb.jpg',
+    videos: [
+      {
+        src: '/projects/cordganizer/assembly.mp4',
+        label: 'Robotic assembly sequence — lid to body',
+      },
+      {
+        src: '/projects/cordganizer/machining.mp4',
+        label: 'CNC machining sequence for Cordganizer parts',
+      },
+    ],
+    images: [
+      {
+        src: '/projects/cordganizer/machine-still.jpg',
+        caption: 'Haas mill cutting Cordganizer stock in the ADML cell.',
+      },
+      {
+        src: '/projects/cordganizer/routing-diagram.png',
+        caption:
+          'Routing diagram with step times and utilizations — body machining marked as bottleneck.',
+      },
+      {
+        src: '/projects/cordganizer/bumes-lid-script.png',
+        caption:
+          'Annotated BUMES lid script: parallel processes, Mary release during mill cut, safety wait before unload.',
+      },
+      {
+        src: '/projects/cordganizer/timing-analysis.png',
+        caption: 'Task-level timing table derived from epoch timestamps in the BUMES report.',
+      },
+      {
+        src: '/projects/cordganizer/bumes-body-script.png',
+        caption: 'Body process script — Edie tends the longer mill program that sets cell takt.',
+      },
+    ],
+    role: 'CIM process, BUMES scripting, and timing analysis',
+    timeline: 'Fall 2026 · Boston University · ME345',
+  },
+  {
+    id: 'epic-box',
+    slug: 'epic-box',
+    title: 'EPIC Box',
+    category: 'Manufacturing · CAM · Robotic Assembly',
+    description:
+      'Two-piece HDPE enclosure designed for vise clamping and robot gripping, machined on Haas mills and assembled by UR arms in a three-robot production cell.',
+    problem:
+      'The enclosure had to be machinable from HDPE blanks, grippable by a UR5, and press-fit assemblable without human fingers in the loop. A pretty CAD model that needed hand finishing would fail the cell.',
+    decisions:
+      'Features were sized for vise jaws and robot fingers first, aesthetics second. Fusion 360 CAM owned the toolpaths; BUMES owned tending, transfer, and assembly order. We compared alternate production sequences specifically to cut idle time on the mills and arms.',
+    build:
+      'Base and lid were CAM’d, simulated, then cut on Haas mills. Cell layout used three UR5 stations, two mills, conveyor, and a vision check. Teach-pendant waypoints and digital I/O handled machine-tending motions.',
+    result:
+      'Finished HDPE assemblies came off the line with carabiner cutouts and mating features that robots could actually hold and press together — validated in CAM simulation and on the physical cell.',
+    tools: [
+      'Fusion 360 CAM',
+      'Haas CNC',
+      'Universal Robots',
+      'Machine vision',
+      'HDPE',
+      'BUMES',
+    ],
+    thumbnail: '/projects/epic-box-machined.jpg',
+    videos: [
+      {
+        src: '/projects/epic-box/cnc.mp4',
+        label: 'CNC machining of EPIC Box parts',
+      },
+      {
+        src: '/projects/epic-box-lid-simulation.mov',
+        label: 'CAM simulation — lid toolpath',
+      },
+    ],
+    images: [
+      {
+        src: '/projects/epic-box-machined.jpg',
+        caption:
+          'Machined HDPE assembly with carabiner cutout — designed around vise and gripper geometry.',
+      },
+      {
+        src: '/projects/epic-box-cad-assembly.jpg',
+        caption: 'Exploded CAD of lid and base.',
+      },
+      {
+        src: '/projects/epic-box-cam.jpg',
+        caption: 'Fusion 360 CAM simulation for the base.',
+      },
+      {
+        src: '/projects/epic-box-cell-layout.png',
+        caption: 'ADML cell: three UR5s, two Haas mills, conveyor, annotated part flow.',
+      },
+      {
+        src: '/projects/epic-box-ur-pendant.jpg',
+        caption: 'UR teach pendant — waypoints and I/O for tending.',
+      },
+      {
+        src: '/projects/epic-box-vision.jpg',
+        caption: 'Vision station checking parts on the line.',
+      },
+    ],
+    role: 'CAM, robotic process, and enclosure design',
+    timeline: 'Fall 2026 · Boston University',
+  },
+  {
+    id: 'ur5-force-assembly',
+    slug: 'ur5-force-guided-assembly',
+    title: 'UR5 Force-Guided Assembly',
+    category: 'Robotics · Force Control · Assembly',
+    description:
+      'Independently programmed and debugged a UR5 to align a lid, press-fit it onto an enclosure using force feedback, and unload the assembled part in a 60-second cycle.',
+    problem:
+      'Open-loop lid placement misses when parts sit a few millimeters off. Press-fitting by position alone either fails to seat or overloads the part and the robot. The cell needed a repeatable assemble-and-unload cycle without a human babysitting each press.',
+    decisions:
+      'Force feedback closed the loop on the press: approach in free space, then switch to force-guided seating so the lid finds the enclosure features instead of relying on perfect fixture tolerance. Cycle budget was hard-capped at 60 seconds including unload.',
+    build:
+      'I wrote and stepped through the UR program on the teach pendant — waypoint alignment, force-mode press, success/fail thresholds, and unload to the outbound pose. Debugging focused on contact detection false positives and press depth that looked fine in air but crushed soft stock.',
+    result:
+      'Stable 60-second cycles: align → force-guided press-fit → unload. The same force-guided mindset carried into larger CIM assembly sequences where position-only mating was not enough.',
+    tools: [
+      'UR5',
+      'Force feedback',
+      'Teach pendant',
+      'Assembly sequencing',
+    ],
+    thumbnail: '/projects/epic-box-ur-pendant.jpg',
+    images: [
+      {
+        src: '/projects/epic-box-ur-pendant.jpg',
+        caption: 'UR teach pendant used to program and debug force-guided assembly motions.',
+      },
+      {
+        src: '/projects/epic-box-machined.jpg',
+        caption: 'Enclosure geometry the lid had to align to and press-fit against.',
+      },
+    ],
+    role: 'Independent UR5 programming and debug',
+    timeline: 'Fall 2026 · Boston University',
+  },
+  {
+    id: 'threshold',
+    slug: 'threshold',
+    title: 'Threshold',
+    category: 'Hackathon · Health Data',
+    description:
+      'Eligibility linter and patient finder across 1,011 recruiting Massachusetts cancer trials. 2nd Place — Health & Biotech at Hackachusetts × DS+X.',
+    problem:
+      'Trial eligibility text quietly excludes people. Protocol teams rarely see which rules drive the exclusion, or how those rules sit against county health data.',
+    decisions:
+      'Parse ClinicalTrials.gov criteria, flag restrictive language, and suggest more inclusive wording grounded in guidance. Pair barriers with CDC PLACES and MassGIS county layers so the map is not just geography — it is exclusion intensity next to health burden.',
+    build:
+      'I led front-end and UI: landscape of restriction rates, county map, and patient-facing finder. Built in ~11 hours with Andria Chen, Arush Vyas, and Namig Mirzayev.',
+    result:
+      'Held-out extraction hit 92% recall and 98% precision on 10 unseen trials. 2nd Place, Health & Biotech Track.',
+    tools: ['Next.js', 'ClinicalTrials.gov', 'CDC PLACES', 'MassGIS', 'UI design'],
+    thumbnail: '/projects/threshold-home.png',
+    images: [
+      {
+        src: '/projects/threshold-home.png',
+        caption: 'Threshold home — Fair eligibility. More possibility.',
+      },
+      {
+        src: '/projects/threshold-landscape.png',
+        caption: 'Restriction rates across 1,011 Massachusetts-linked trials.',
+      },
+      {
+        src: '/projects/threshold-map.png',
+        caption: 'County map: exclusions vs health and environmental-justice data.',
+      },
+    ],
+    role: 'Front-end and UI design lead — Team Threshold',
+    timeline: 'Fall 2026 · Hackachusetts × DS+X · 2nd Place, Health & Biotech',
+  },
+  {
     id: 'thermocapillary',
     slug: 'thermocapillary-thin-film-research',
     title: 'Thermocapillary Thin Film Research',
-    category: 'Research / Interfacial Phenomena / Optics / Fluids',
+    category: 'Research · Optics · Fluids',
     description:
-      'Developing an optical thin-film experiment using a silicone oil film suspended underwater and coupled to an optical fiber. The project explores how localized infrared heating creates thermocapillary thickness variations that modulate the film’s refractive index and steer guided green light. Current work focuses on stabilizing the underwater film using surfactants and designing supporting CAD fixtures, test hardware, and experimental setups.',
-    detailedDescription:
-      'I am working in an interfacial phenomena lab on an optical thin-film experiment using a silicone oil film suspended underwater. The film is coupled to an optical fiber that projects a beam of light through the film. When the film is thin enough, it can behave like an optical waveguide.\n\nThe experiment uses infrared illumination at an absorbing wavelength to locally heat the oil film. This creates a thermocapillary effect, changing the local thickness of the film. Since film thickness affects the optical behavior of the system, these changes can steer or shift the beam of light.\n\nMy current focus is stabilizing the underwater oil film using surfactants and designing the supporting experimental hardware. This includes CAD fixtures, test components, setup design, optical alignment, and troubleshooting the film formation process.',
+      'Underwater silicone-oil thin film coupled to an optical fiber — IR heating drives thermocapillary thickness change that steers guided green light.',
+    problem:
+      'A free underwater oil film wants to rupture or thicken unevenly. Without a stable film, there is no waveguide to heat, and no optical steering to measure.',
+    decisions:
+      'Stabilize the film with surfactants before chasing fancy optical results. IR wavelength is chosen to absorb in the oil so heating stays local. Fixtures are designed in CAD around the tank, fiber, and alignment constraints of a wet optical bench.',
+    build:
+      'Current work: surfactant trials, film formation troubleshooting, fiber coupling, and hardware for holding the underwater film without killing the optical path.',
+    result:
+      'Ongoing lab project — success metric is a repeatable film that holds long enough for IR-driven beam steering measurements.',
     tools: [
       'Optics',
       'Thin films',
-      'Interfacial phenomena',
       'Thermocapillary flow',
       'Surfactants',
       'CAD',
@@ -21,250 +278,84 @@ export const projects = [
     images: [
       {
         src: '/projects/thin-film-main.jpeg',
-        caption:
-          'Green light coupled into the underwater thin-film experimental setup through an optical fiber.',
+        caption: 'Green light coupled into the underwater thin-film setup through an optical fiber.',
       },
       {
         src: '/projects/thin-film-holder-top.jpeg',
-        caption:
-          'Top view of the underwater thin-film experimental setup during film stabilization testing.',
+        caption: 'Top view during film stabilization testing.',
       },
       {
         src: '/projects/thin-film-water-tank.jpeg',
-        caption:
-          'Side view of the underwater thin-film experimental setup during film stabilization testing.',
+        caption: 'Side view of the underwater tank and fixture.',
       },
     ],
-    role: 'Research Assistant — Boston University College of Engineering',
+    role: 'Research Assistant — Applied Interfacial Phenomena Lab',
     timeline: 'September 2025 — Present',
-    process:
-      'Thin-film stabilization, surfactant testing, CAD fixture design, optical fiber integration, infrared heating, and experimental troubleshooting.',
   },
   {
     id: 'microlens-nanoscribe',
     slug: 'microlens-fabrication-nanoscribe',
     title: 'Microlens Fabrication Using Nanoscribe',
-    category: 'Microfabrication / Optics',
+    category: 'Microfabrication · Optics',
     description:
-      'Designing and fabricating high-resolution microlenses and microscale optical components using a Nanoscribe two-photon polymerization system. This work supports thin-film optical experiments through custom microstructures, lab tools, and micro-optical components.',
-    detailedDescription:
-      'I use Boston University’s Nanoscribe two-photon polymerization system to fabricate highly detailed microscale structures, with a focus on developing a reliable manufacturing process for precision microlenses.\n\nBefore gaining access to the machine, I completed over 9 hours of required training to learn the full workflow, safety procedures, material handling, and system operation. My work involves preparing CAD models for nanoscale printing, setting print parameters, testing fabrication consistency, and evaluating print quality to improve repeatability.\n\nThe main goal of this project is to establish a dependable method for manufacturing extremely precise microlenses while gaining hands-on experience with advanced microfabrication technology and high-resolution additive manufacturing.',
+      'Two-photon polymerization process for precision microlenses and lab fixtures on BU’s Nanoscribe — aimed at repeatable micro-optics, not one-off prints.',
+    problem:
+      'Microlenses for fluid-interface experiments need feature sizes and surface quality that ordinary 3D printers cannot hit. Process parameters that work once still fail the next day without a locked workflow.',
+    decisions:
+      'Treat Nanoscribe as a manufacturing process: CAD prep, print parameters, material choice, and inspection under microscope before claiming a “good” lens. Completed 9+ hours of required training before unsupervised runs.',
+    build:
+      'CAD for nanoscale printability, parameter sweeps, polymer comparisons for lens fabrication, and fixtures that support forming lenses at a fluid interface.',
+    result:
+      'Working high-resolution microstructures and an improving process window for microlens arrays used in the interfacial optics workstream.',
     tools: [
       'Nanoscribe',
       'Two-photon polymerization',
       'Microlenses',
       'Microfabrication',
-      'Optics',
       'CAD',
     ],
     thumbnail: '/projects/Mircolense_1.JPG',
     images: [
       {
         src: '/projects/microlense1.JPG',
-        caption:
-          'Nanoscribe-fabricated microlens/microstructure used for developing high-resolution optical component fabrication workflows.',
+        caption: 'Nanoscribe-fabricated microstructure for microlens process development.',
       },
       {
         src: '/projects/microlense2.JPG',
-        caption:
-          'Using a high resolution microscope to evaluate the fabrication quality of microstructures/microlenses.',
+        caption: 'Microscope inspection of print quality.',
       },
       {
         src: '/projects/Mircolense_1.JPG',
-        caption:
-          'Open chamber of the Nanoscribe Photonic Professional GT during microlens fabrication setup.',
+        caption: 'Nanoscribe Photonic Professional GT chamber during setup.',
       },
       {
         src: '/projects/Microlense_2.JPG',
-        caption:
-          'Fabricated microscale structure on a glass substrate, shown next to a finger for scale.',
-      },
-      {
-        src: '/projects/Microlense_3.JPG',
-        caption:
-          'Nanoscribe Photonic Professional GT system used for two-photon polymerization microlens fabrication.',
+        caption: 'Printed structure on glass next to a finger for scale.',
       },
       {
         src: '/projects/Microlense_4.JPG',
-        caption:
-          'NanoWrite interface and live camera feed during a Nanoscribe multilens print job.',
+        caption: 'NanoWrite interface and live camera during a multilens job.',
       },
     ],
-    role: 'Research Assistant — Boston University College of Engineering',
+    role: 'Research Assistant — Applied Interfacial Phenomena Lab',
     timeline: 'September 2025 — Present',
-    process:
-      'Nanoscribe training and certification, microlens fabrication, CAD preparation, print parameter setup, process optimization, repeatability testing, and microfabrication workflows.',
-  },
-  {
-    id: 'heimdall',
-    slug: 'heimdall',
-    title: 'Heimdall',
-    category: 'Hackathon / Search & Rescue / Embedded Systems',
-    description:
-      'Offline search-and-rescue station that finds coded acoustic beacons without GPS, internet, or cellular service, then aims a thermal camera toward the highest-priority victim. Finalist — Top 5 of 32 teams at Code Metal Forge.',
-    detailedDescription:
-      'Heimdall is an offline, sound-based search-and-rescue system built for disasters where networks may be down. Victims emit coded acoustic chirps from a phone web app or a small ESP32 Tag; the rescue station detects those chirps, estimates direction, and points a thermal camera toward the selected person.\n\nI led hardware integration for the station: assembling and wiring a Raspberry Pi 5, four-microphone array, thermal camera, and servo-driven pan-tilt head; soldering connections; and calibrating the array and pan-tilt for live demos.\n\nIn calibration tests at 4 m, the station decoded 95% of acoustic signals and estimated an 89.5° mean bearing for a source positioned at 90°.',
-    tools: [
-      'Raspberry Pi 5',
-      'reSpeaker 4-mic array',
-      'Thermal camera',
-      'Servo pan-tilt',
-      'ESP32',
-      'Python',
-      'FastAPI',
-    ],
-    thumbnail: '/projects/heimdall-wearable.jpg',
-    images: [
-      {
-        src: '/projects/heimdall-wearable.jpg',
-        caption:
-          'Wearable Heimdall rescue station: Raspberry Pi, mic array, and thermal pan-tilt mounted on a handheld cardboard frame.',
-      },
-      {
-        src: '/projects/heimdall-station-hand.jpg',
-        caption:
-          'Station layout with Pi case, glowing mic array, controller board, breadboard, and thermal camera.',
-      },
-      {
-        src: '/projects/heimdall-sos-ui.jpg',
-        caption:
-          'Victim phone beacon UI: large SEND SOS control with condition and people-with-you inputs.',
-      },
-      {
-        src: '/projects/heimdall-beacon-settings.jpg',
-        caption:
-          'Beacon settings: floor selection, relay other beacons, auto-SOS on fall, and demo-speed toggles.',
-      },
-      {
-        src: '/projects/heimdall-beacon-status.jpg',
-        caption:
-          'Beacon status view while listening for other phones and configuring relay behavior.',
-      },
-      {
-        src: '/projects/heimdall-tag-board.jpg',
-        caption:
-          'ESP32 Tag prototype with Grove sensors, SOS button, and touch pads on a handheld cardboard board.',
-      },
-      {
-        src: '/projects/heimdall-operator-ui.jpg',
-        caption:
-          'Operator UI over local Wi-Fi showing victims, bearing, and thermal feed.',
-      },
-    ],
-    role: 'Hardware integration lead — Team 31',
-    timeline: 'Fall 2026 · Code Metal Forge Hackathon · Finalist (Top 5 of 32)',
-    process:
-      'Hardware assembly, mic-array and pan-tilt calibration, acoustic decode testing, and live demo wiring.',
-  },
-  {
-    id: 'threshold',
-    slug: 'threshold',
-    title: 'Threshold',
-    category: 'Hackathon / Health Data',
-    description:
-      'Clinical-trial eligibility linter and patient finder covering 1,011 recruiting Massachusetts cancer trials. 2nd Place — Health & Biotech Track at Hackachusetts × DS+X.',
-    detailedDescription:
-      'Threshold reads the eligibility criteria of recruiting cancer trials with a Massachusetts site, flags rules that keep people out, and shows protocol teams more inclusive wording grounded in guidance. It pairs ClinicalTrials.gov records with county health and environmental-justice data.\n\nI led front-end and UI design for the dashboard: landscape of eligibility barriers, county map views, and the patient-facing trial finder.\n\nBuilt in about 11 hours with teammates Andria Chen, Arush Vyas, and Namig Mirzayev. Held-out extraction scored 92% recall and 98% precision on 10 unseen trials.',
-    tools: [
-      'Next.js',
-      'ClinicalTrials.gov',
-      'CDC PLACES',
-      'MassGIS',
-      'UI design',
-    ],
-    thumbnail: '/projects/threshold-home.png',
-    images: [
-      {
-        src: '/projects/threshold-home.png',
-        caption: 'Threshold home — Fair eligibility. More possibility.',
-      },
-      {
-        src: '/projects/threshold-landscape.png',
-        caption: 'Landscape view of restriction rates across 1,011 Massachusetts-linked trials.',
-      },
-      {
-        src: '/projects/threshold-map.png',
-        caption: 'County map comparing exclusions with health and environmental-justice data.',
-      },
-    ],
-    role: 'Front-end and UI design lead — Team Threshold',
-    timeline: 'Fall 2026 · Hackachusetts × DS+X · 2nd Place, Health & Biotech',
-    process:
-      'UI design, dashboard layout, and product framing for landscape, map, linter, and finder screens.',
-  },
-  {
-    id: 'epic-box',
-    slug: 'epic-box',
-    title: 'EPIC Box',
-    category: 'Manufacturing / Robotics / CAM',
-    description:
-      'Automated production process using three robotic arms, two Haas CNC mills, and a conveyor to machine a two-piece HDPE enclosure designed for robotic assembly.',
-    detailedDescription:
-      'For Computer Integrated Manufacturing at BU, I co-developed a production cell linking CNC machining, robotic tending, and assembly. Using Fusion 360 CAM, we machined a two-piece HDPE enclosure designed for robotic assembly.\n\nI programmed BUMES scripts for machine tending, part transfer, and assembly, and tested alternative production sequences to identify bottlenecks and reduce equipment idle time.',
-    tools: [
-      'Fusion 360 CAM',
-      'Haas CNC',
-      'Universal Robots',
-      'Machine vision',
-      'HDPE machining',
-    ],
-    thumbnail: '/projects/epic-box-machined.jpg',
-    images: [
-      {
-        src: '/projects/epic-box-machined.jpg',
-        caption:
-          'Machined HDPE EPIC Box assembly with carabiner cutout, designed for vise clamping and robot gripping.',
-      },
-      {
-        src: '/projects/epic-box-cad-assembly.jpg',
-        caption: 'Exploded CAD view of the lid and base assembly.',
-      },
-      {
-        src: '/projects/epic-box-base-cad.jpg',
-        caption: 'Base CAD model showing the internal cavity and carabiner feature.',
-      },
-      {
-        src: '/projects/epic-box-cam.jpg',
-        caption: 'Fusion 360 CAM simulation for the base machining sequence.',
-      },
-      {
-        src: '/projects/epic-box-cell-layout.png',
-        caption:
-          'ADML cell layout: three UR5 stations, two Haas mills, conveyor, and annotated base/lid flow.',
-      },
-      {
-        src: '/projects/epic-box-ur-pendant.jpg',
-        caption: 'UR teach pendant with waypoints and digital I/O for machine-tending motion.',
-      },
-      {
-        src: '/projects/epic-box-vision.jpg',
-        caption: 'Machine-vision station checking parts on the line.',
-      },
-    ],
-    video: '/projects/epic-box-lid-simulation.mov',
-    role: 'CAM, robotic process, and enclosure design',
-    timeline: 'Fall 2026 · Boston University',
-    process:
-      'Fusion 360 CAM, HDPE machining, UR programming, vision inspection, and production-sequence timing.',
   },
   {
     id: 'rhythm-game',
     slug: 'electromechanical-rhythm-game',
     title: 'Electromechanical Rhythm Game',
-    category: 'Mechatronics / Product Design',
+    category: 'Mechatronics · Product Design',
     description:
-      'Rhythm Punch converts Guitar Hero-style tracks into physical gameplay with solenoid-actuated notes and limit-switch hit detection.',
+      'Rhythm Punch turns Guitar Hero-style tracks into physical notes — solenoids pop buttons up; limit switches score the hits.',
     detailedDescription:
-      'This project was a physical rhythm game inspired by Guitar Hero. Instead of displaying notes only on a screen, the system translated rhythm tracks into mechanical motion using solenoid-actuated notes.\n\nI worked on the CAD layout and physical prototype, including the structure, component placement, and mechanical packaging. The system integrated solenoids, limit switches, MOSFET drivers, speakers, an LED matrix, and display components.\n\nThe main challenge was combining mechanical design, electronics, and user interaction into one functional prototype. The final system turned digital rhythm input into a physical arcade-style experience.',
+      'Instead of notes only on a screen, solenoids physically raise buttons in sync with the track while limit switches detect hits and update score.\n\nI owned CAD layout and mechanical packaging: laser-cut housing, 3D-printed buttons, MOSFET-driven solenoids, LED matrix, speakers, and display. Early cardboard prototypes failed tolerance; the final enclosure fixed mounting, wiring baseplate, and control-panel placement.\n\nTesting showed stronger actuation than release — electromagnetic pull vs spring return — which set the cutoff timing for short notes.',
     tools: [
       'CAD',
       'Arduino',
       'Solenoids',
       'Limit switches',
-      'MOSFET drivers',
       'Laser cutting',
       '3D printing',
-      'Prototyping',
     ],
     thumbnail: '/projects/rhythm-game-main.jpg',
     images: [
@@ -275,29 +366,27 @@ export const projects = [
       '/projects/rhythm-game-block-diagram.jpg',
       '/projects/rhythm-game-testing.jpg',
     ],
-    role: 'Course Project',
-    timeline: 'Spring 2026',
-    process:
-      'CAD layout, laser-cut housing, solenoid actuation, limit switch hit detection, electronics integration, Arduino-based control, and physical gameplay testing.',
+    role: 'CAD, housing, and electromechanical integration',
+    timeline: 'Spring 2026 · Boston University',
     caseStudy: {
       subtitle: 'Rhythm Punch',
       tagline: 'Digital → Physical',
       overview:
-        'Rhythm Punch is an electromechanical rhythm game that converts Guitar Hero-style tracks into physical gameplay. Instead of notes appearing only on a screen, solenoid-actuated buttons physically pop up in sync with the music, while limit switches detect player input and update the score.',
+        'Rhythm Punch converts Guitar Hero-style tracks into physical gameplay. Solenoid-actuated buttons pop up in sync with the music; limit switches detect hits and update the score.',
       systemFlow: [
         'User chooses a track and difficulty',
-        'Track data is converted into timed note commands',
-        'Microcontroller sends signals to solenoids',
+        'Track data becomes timed note commands',
+        'Microcontroller drives solenoids',
         'Notes physically pop up in sync with music',
-        'Hit sensors check timing and update the score',
+        'Hit sensors check timing and update score',
       ],
       housing: {
         description:
-          'The housing was designed as a laser-cut enclosure with internal supports for the actuation system and electronics. The design evolved from a rough prototype into a cleaner final build with better tolerances, 3D-printed buttons, mounting brackets, and a front-facing control panel.',
+          'Laser-cut enclosure with internal supports for actuators and electronics. Cardboard prototypes failed tolerance; the final build tightened fit, button mounts, and front-panel layout.',
         gallery: [
           {
             src: '/projects/rhythm-game-housing.jpg',
-            label: 'Outer box / housing prototype',
+            label: 'Outer housing prototype',
           },
           {
             src: '/projects/rhythm-game-controls.jpg',
@@ -310,26 +399,26 @@ export const projects = [
         ],
       },
       components: [
-        { name: 'Solenoids', detail: 'Pull-type actuators that physically raise each note button.' },
-        { name: 'Limit switches', detail: 'Roller switches for hit detection and timing input.' },
-        { name: 'Microcontroller', detail: 'Runs sequencing, scoring, and actuator control.' },
-        { name: 'LCD display', detail: 'Shows track selection, level, and score feedback.' },
+        { name: 'Solenoids', detail: 'Pull-type actuators that raise each note button.' },
+        { name: 'Limit switches', detail: 'Roller switches for hit detection.' },
+        { name: 'Microcontroller', detail: 'Sequencing, scoring, actuator control.' },
+        { name: 'LCD display', detail: 'Track, level, and score feedback.' },
         { name: 'LED matrix', detail: 'Visual note preview on the play surface.' },
-        { name: 'SD card', detail: 'Stores level and audio track data.' },
-        { name: 'Audio DAC', detail: 'Handles audio output during gameplay.' },
-        { name: 'Power supply / drivers', detail: 'Powers solenoids and interface electronics.' },
+        { name: 'SD card', detail: 'Level and audio track storage.' },
+        { name: 'Audio DAC', detail: 'Gameplay audio output.' },
+        { name: 'Power / drivers', detail: 'Solenoid drive and interface power.' },
       ],
       wiring:
-        'The wiring was consolidated on a baseplate to keep the system organized and serviceable. Solenoids were connected through drivers and removable connectors for easier maintenance. The electronics integrated the microcontroller, switches, solenoid drivers, display components, and audio system.',
+        'Wiring consolidated on a baseplate. Solenoids use drivers and removable connectors so a failed coil can be swapped without rewiring the board.',
       wiringImage: '/projects/rhythm-game-wiring2.jpg',
       blockDiagram: '/projects/rhythm-game-block-diagram.jpg',
       prototypeIteration:
-        'The first prototype used cardboard and tape and did not have enough measured tolerance. The final version improved mechanical fit, tolerance, control-panel placement, button design, and visual presentation.',
+        'First prototype: cardboard and tape, poor tolerance. Final version: measured fits, better panel placement, 3D-printed buttons.',
       testingResults:
-        'Testing focused on switch reliability and end-to-end actuator performance for short notes and short gaps between notes. The results showed clear cutoff behavior, with stronger performance during actuation than release due to the difference between electromagnetic actuation and spring return.',
+        'Switch reliability and short-note actuation were the gates. Actuation outperformed release because pull is electromagnetic and return is spring — that set timing cutoffs.',
       testingImage: '/projects/rhythm-game-testing.jpg',
       contribution:
-        'My work focused on CAD layout, mechanical packaging, housing fabrication, visual design of the enclosure, laser-cut structural parts, integration of buttons and interface components, and physical prototype assembly.',
+        'CAD layout, mechanical packaging, laser-cut structure, button/interface integration, and physical assembly.',
       prototypeDemo: {
         description: 'Demo of the electromechanical rhythm game.',
         youtubeEmbedUrl: 'https://www.youtube.com/embed/upo_cHmujE0',
@@ -340,80 +429,69 @@ export const projects = [
     id: 'gearbox',
     slug: 'gearbox-cad-design',
     title: 'Gearbox CAD Design',
-    category: 'Mechanical Design / CAD',
+    category: 'Mechanical Design · CAD',
     description:
-      'Designed a gearbox assembly for a mechanical engineering CAD course, focusing on component modeling, assembly constraints, gear placement, shafts, housing design, and mechanical packaging.',
-    detailedDescription:
-      'For a mechanical engineering CAD course, I designed a complete gearbox assembly in SolidWorks. The project included individual part modeling, assembly constraints, gear placement, shaft design, housing geometry, and technical documentation.\n\nThe focus was on creating a clean mechanical assembly with realistic part relationships and organized CAD structure. I modeled the components with attention to alignment, packaging, and how the parts would fit together as a functional system.\n\nThis project strengthened my skills in parametric modeling, assemblies, technical drawings, and mechanical design communication.',
-    tools: [
-      'SolidWorks',
-      'CAD assembly',
-      'Mechanical design',
-      'Gear systems',
-      'Technical drawings',
-    ],
+      'Full gearbox assembly in SolidWorks — gears, shafts, housing, and packaging with assembly constraints that actually mate.',
+    problem:
+      'A gearbox model is useless if shafts float, gears don’t mesh on centers, or the housing can’t close around the stack.',
+    decisions:
+      'Model parts parametrically, constrain the assembly to real mate conditions, and document with technical drawings instead of screenshot-only submissions.',
+    build:
+      'Individual part models, gear train and shaft layout, housing geometry, and drawing package for a mechanical engineering CAD course.',
+    result:
+      'Clean, constrained assembly that communicates how the mechanism packs and turns.',
+    tools: ['SolidWorks', 'Assemblies', 'Gear systems', 'Technical drawings'],
     thumbnail: '/projects/gearbox.png',
     images: [
       {
         src: '/projects/gearbox.png',
-        caption:
-          'SolidWorks gearbox assembly showing the gear train, motors, shafts, mounting plates, and mechanical packaging.',
+        caption: 'Gear train, motors, shafts, and mounting plates in one assembly.',
       },
     ],
-    video: '/projects/gearbox-video.mp4',
-    role: 'Course Project',
+    videos: [{ src: '/projects/gearbox-video.mp4', label: 'Gearbox assembly view' }],
+    role: 'Course project',
     timeline: 'Fall 2025',
-    process:
-      'SolidWorks part modeling, assembly constraints, gear and shaft placement, housing design, technical drawings, and mechanical packaging.',
   },
   {
     id: 'temperature-monitor',
     slug: 'room-temperature-monitoring-system',
     title: 'Room Temperature Monitoring System',
-    category: 'Electronics / Embedded Systems',
+    category: 'Electronics · Embedded',
     description:
-      'Engineered a portable, real-time temperature monitoring system using an Arduino Uno and TMP36 sensor, with LCD output and a threshold-based alert system (70–80°F) using LED and buzzer feedback. Fabricated a custom laser-cut and 3D-printed enclosure.',
-    detailedDescription:
-      'I designed and built a portable room temperature monitoring system using an Arduino Uno and TMP36 temperature sensor. The system reads temperature data, processes it, and displays the result on an LCD screen.\n\nThe device includes a threshold-based alert system for the 70–80°F range. When the temperature moves outside the target range, LEDs and a buzzer provide feedback. I also designed and fabricated a custom enclosure to organize the electronics and make the device more portable.\n\nThis project combined circuit design, sensor integration, embedded programming, and physical enclosure design into a functional prototype.',
-    tools: [
-      'Arduino',
-      'Sensors',
-      'Circuits',
-      'LCD',
-      'Laser cutting',
-      '3D printing',
-    ],
+      'Portable Arduino + TMP36 monitor with LCD readout and LED/buzzer alerts outside 70–80°F, in a laser-cut / 3D-printed enclosure.',
+    problem:
+      'A breadboard thermometer isn’t something you leave in a room. It needed a real enclosure, a clear display, and an obvious alert when temperature drifts.',
+    decisions:
+      'TMP36 into Arduino for the reading, LCD for the human, threshold logic for 70–80°F with LED + buzzer so you don’t have to stare at the screen.',
+    build:
+      'Sensor circuit, firmware for convert/display/alert, and a custom enclosure to hold the board and make it portable.',
+    result:
+      'Working handheld unit that reads continuously and alarms outside the band.',
+    tools: ['Arduino', 'TMP36', 'LCD', 'Laser cutting', '3D printing'],
     thumbnail: '/projects/thermostat_main_photo.jpg',
-    galleryHeroCount: 2,
     images: [
       {
         src: '/projects/thermostat_main_photo.jpg',
-        caption:
-          'Portable Arduino-based temperature monitoring system with LCD display, LED indicators, buzzer feedback, and custom enclosure.',
+        caption: 'Completed monitor with LCD, LEDs, buzzer, and enclosure.',
       },
       {
         src: '/projects/thermostat_new_photo.jpg',
-        caption:
-          'Additional view of the completed thermostat prototype showing the enclosure and hardware layout.',
+        caption: 'Alternate view of enclosure and layout.',
       },
       {
         src: '/projects/thermostat_code1.PNG',
-        caption:
-          'Arduino code for reading TMP36 temperature sensor data and processing temperature values.',
+        caption: 'TMP36 read and temperature conversion.',
       },
       {
         src: '/projects/thermostat_code2.PNG',
-        caption:
-          'Arduino code for threshold-based LED/buzzer alerts and LCD output.',
+        caption: 'Threshold alerts and LCD output.',
       },
     ],
-    video: '/projects/thermostat_video.MOV',
-    codeNote:
-      'The code reads voltage from the TMP36 temperature sensor, converts the signal into temperature, displays the reading on an LCD, and triggers LED/buzzer alerts when the temperature moves outside the target range.',
-    role: 'Course Project',
+    videos: [
+      { src: '/projects/thermostat_video.MOV', label: 'Monitor demo' },
+    ],
+    role: 'Course project',
     timeline: 'Spring 2025',
-    process:
-      'Arduino programming, TMP36 sensor integration, LCD output, LED/buzzer alerts, threshold logic, circuit prototyping, and custom enclosure fabrication.',
   },
 ];
 

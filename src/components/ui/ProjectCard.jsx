@@ -41,7 +41,7 @@ export default function ProjectCard({ project, index }) {
           </p>
 
           <div className="flex flex-wrap gap-1.5">
-            {project.tools.map((tool) => (
+            {project.tools.slice(0, 4).map((tool) => (
               <span
                 key={tool}
                 className="rounded-md border border-border-subtle bg-surface px-2 py-0.5 font-mono text-[11px] text-zinc-500"
@@ -51,8 +51,8 @@ export default function ProjectCard({ project, index }) {
             ))}
           </div>
 
-          <span className="mt-1 inline-flex w-full items-center justify-center rounded-lg border border-border px-5 py-2.5 text-sm font-medium text-zinc-200 transition-all duration-200 group-hover:border-accent/50 group-hover:text-accent sm:w-auto">
-            View Details
+          <span className="mt-1 font-mono text-xs text-zinc-500 transition-colors group-hover:text-accent">
+            Open project →
           </span>
         </div>
       </Link>
