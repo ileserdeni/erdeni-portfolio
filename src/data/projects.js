@@ -113,29 +113,42 @@ export const projects = [
       'Python',
       'FastAPI',
     ],
-    thumbnail: '/projects/heimdall-station.jpg',
+    thumbnail: '/projects/heimdall-wearable.jpg',
     images: [
       {
-        src: '/projects/heimdall-station.jpg',
+        src: '/projects/heimdall-wearable.jpg',
         caption:
-          'Heimdall rescue-station prototype: Raspberry Pi, mic array, controller board, and thermal camera on a pan-tilt mount.',
+          'Wearable Heimdall rescue station: Raspberry Pi, mic array, and thermal pan-tilt mounted on a handheld cardboard frame.',
+      },
+      {
+        src: '/projects/heimdall-station-hand.jpg',
+        caption:
+          'Station layout with Pi case, glowing mic array, controller board, breadboard, and thermal camera.',
+      },
+      {
+        src: '/projects/heimdall-sos-ui.jpg',
+        caption:
+          'Victim phone beacon UI: large SEND SOS control with condition and people-with-you inputs.',
+      },
+      {
+        src: '/projects/heimdall-beacon-settings.jpg',
+        caption:
+          'Beacon settings: floor selection, relay other beacons, auto-SOS on fall, and demo-speed toggles.',
+      },
+      {
+        src: '/projects/heimdall-beacon-status.jpg',
+        caption:
+          'Beacon status view while listening for other phones and configuring relay behavior.',
+      },
+      {
+        src: '/projects/heimdall-tag-board.jpg',
+        caption:
+          'ESP32 Tag prototype with Grove sensors, SOS button, and touch pads on a handheld cardboard board.',
       },
       {
         src: '/projects/heimdall-operator-ui.jpg',
         caption:
           'Operator UI over local Wi-Fi showing victims, bearing, and thermal feed.',
-      },
-      {
-        src: '/projects/heimdall-thermal-pantilt.jpg',
-        caption: 'Thermal camera on the servo-driven pan-tilt mount.',
-      },
-      {
-        src: '/projects/heimdall-wiring.jpg',
-        caption: 'Controller, breadboard, and sensor wiring during integration.',
-      },
-      {
-        src: '/projects/heimdall-servo.jpg',
-        caption: 'Pan-tilt servo wired for camera aiming.',
       },
     ],
     role: 'Hardware integration lead — Team 31',
@@ -195,25 +208,40 @@ export const projects = [
       'Machine vision',
       'HDPE machining',
     ],
-    thumbnail: '/projects/epic-box-lid.png',
+    thumbnail: '/projects/epic-box-machined.jpg',
     images: [
       {
-        src: '/projects/epic-box-lid.png',
-        caption: 'CAD top view of the pocketed HDPE lid designed for robotic assembly.',
+        src: '/projects/epic-box-machined.jpg',
+        caption:
+          'Machined HDPE EPIC Box assembly with carabiner cutout, designed for vise clamping and robot gripping.',
+      },
+      {
+        src: '/projects/epic-box-cad-assembly.jpg',
+        caption: 'Exploded CAD view of the lid and base assembly.',
+      },
+      {
+        src: '/projects/epic-box-base-cad.jpg',
+        caption: 'Base CAD model showing the internal cavity and carabiner feature.',
+      },
+      {
+        src: '/projects/epic-box-cam.jpg',
+        caption: 'Fusion 360 CAM simulation for the base machining sequence.',
+      },
+      {
+        src: '/projects/epic-box-cell-layout.png',
+        caption:
+          'ADML cell layout: three UR5 stations, two Haas mills, conveyor, and annotated base/lid flow.',
       },
       {
         src: '/projects/epic-box-ur-pendant.jpg',
         caption: 'UR teach pendant with waypoints and digital I/O for machine-tending motion.',
       },
       {
-        src: '/projects/epic-box-ur-program.jpg',
-        caption: 'Polyscope program for pick/place and gripper actuation.',
-      },
-      {
         src: '/projects/epic-box-vision.jpg',
         caption: 'Machine-vision station checking parts on the line.',
       },
     ],
+    video: '/projects/epic-box-lid-simulation.mov',
     role: 'CAM, robotic process, and enclosure design',
     timeline: 'Fall 2026 · Boston University',
     process:
