@@ -66,7 +66,11 @@ export default function ProjectDetail() {
   }
 
   const galleryImages = normalizeImages(
-    project.images?.length > 0 ? project.images : [{ src: project.thumbnail, caption: null }],
+    project.images?.length > 0
+      ? project.images
+      : project.interactive || project.videos?.length
+        ? []
+        : [{ src: project.thumbnail, caption: null }],
   );
 
   const videos = project.videos?.length
