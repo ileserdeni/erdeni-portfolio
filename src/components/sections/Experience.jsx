@@ -45,6 +45,20 @@ export default function Experience() {
                     </p>
                   )}
                 </div>
+
+                {item.bullets?.length > 0 && (
+                  <ul className="mt-4 space-y-2 border-t border-border-subtle pt-4">
+                    {item.bullets.map((bullet) => (
+                      <li
+                        key={bullet.slice(0, 48)}
+                        className="flex gap-2 text-sm leading-relaxed text-muted"
+                      >
+                        <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent/70" />
+                        <span>{bullet}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </motion.article>
             ))}
           </div>

@@ -9,19 +9,21 @@ export const projects = [
     problem:
       'In a collapsed building or wildfire zone, phones may have no signal and GPS can be useless indoors. Rescuers still need a way to find people who can make sound — and aim a thermal camera at the right direction without guessing.',
     decisions:
-      'We skipped cloud services and cellular entirely. Victims emit coded acoustic chirps from a phone web app or a small ESP32 Tag. The station listens with a four-mic array, estimates bearing, and drives a servo pan-tilt so the thermal camera points at the selected source.\n\nI owned hardware integration: Raspberry Pi 5, mic array, thermal camera, pan-tilt, soldering, cable routing, and calibration for a live demo that had to survive being picked up and walked around.',
+      'No cloud, no cellular. Victims emit HEIMDALL-AC1 acoustic chirps from a phone web app or ESP32 Tag. A Seeed reSpeaker XVF3800 4-mic array feeds GCC-PHAT bearing estimation; a servo pan-tilt aims the thermal camera.\n\nI owned station hardware: Raspberry Pi 5 integration, mic-array geometry/mount, thermal + pan-tilt (Seeeduino serial), soldering, cable routing, and live-demo wiring that had to survive being carried.',
     build:
-      'The wearable station packs the Pi, glowing mic array, controller board, and thermal head onto a handheld frame. Operator UI runs over local Wi-Fi. Beacon phones expose SEND SOS plus floor, relay, and fall-detection settings so the demo could show multi-victim priority without pretending we had cell towers.',
+      'Station runs a modular FastAPI “Ear” on the Pi (HTTPS over a local HEIMDALL hotspot). Audio path: XVF3800 USB DFU firmware → 6ch @ 16 kHz → decode on the conference/ASR channel → GCC-PHAT on the four raw mics (6.65 cm square, cable = rear).\n\nPan-tilt auto mode ranks confirmed victims (critical > injured > no_response > ok), ignores low-confidence bearings, and holds ≥1.5 s between moves so servo noise does not wreck the mic array. Relayed frames publish no bearing — auto-aim never points at the relay phone.',
     result:
-      'At 4 m in calibration tests, the station decoded 95% of acoustic signals and estimated an 89.5° mean bearing for a source placed at 90°. That was enough for judges to watch the thermal head swing onto the correct person live.',
+      'At 4 m: 95% decode rate, mean bearing 89.5° for a source at 90°. At 2 m calibration: +90° → 86.6 ± 0.9°, −90° → −99.7 ± 0.5° with the phone speaker aimed at the puck. Line-of-sight and speaker orientation mattered more than fancy post-processing.',
+    technical:
+      'Bearing estimator: band-limited cross-spectrum with partial PHAT weighting (β = 0.7, tuned on 2 m / 4 m recordings — full PHAT was brittle in room noise). Far-field τᵢⱼ = −(pᵢ − pⱼ) · û / c is scored on an upsampled lag grid; coarse curve over −180…180°, then optional multi-frame accumulation per victim id.\n\nMic coordinates (m, front = +x / 0°): ch4 (+0.03325, −0.03325), ch5 (+0.03325, +0.03325), ch2 (−0.03325, +0.03325), ch3 (−0.03325, −0.03325). bearing_offset_deg corrects mount error. New IDs stay unconfirmed until a second frame within 60 s.',
     tools: [
       'Raspberry Pi 5',
-      'reSpeaker 4-mic',
-      'Thermal camera',
-      'Servo pan-tilt',
+      'reSpeaker XVF3800',
+      'GCC-PHAT',
+      'Thermal + pan-tilt',
       'ESP32',
-      'Python',
-      'FastAPI',
+      'FastAPI / WebSocket',
+      'Soldering',
     ],
     thumbnail: '/projects/heimdall-wearable.jpg',
     videos: [
@@ -34,27 +36,32 @@ export const projects = [
       {
         src: '/projects/heimdall-wearable.jpg',
         caption:
-          'Wearable station: Pi, mic array, and thermal pan-tilt on a handheld frame built for walking demos.',
+          'Wearable station: Pi, mic array, and thermal pan-tilt on a handheld frame for walking demos.',
       },
       {
-        src: '/projects/heimdall-station-hand.jpg',
+        src: '/projects/heimdall/wiring.jpg',
         caption:
-          'Layout with Pi case, mic array, controller board, breadboard, and thermal camera.',
+          'Wiring harness — Pi power/data, mic USB (XMOS port), Seeeduino for pan-tilt/knock, routed for demo reliability.',
       },
       {
-        src: '/projects/heimdall-sos-ui.jpg',
-        caption: 'Victim beacon UI — SEND SOS with condition and people-with-you inputs.',
+        src: '/projects/heimdall/thermal-pantilt.jpg',
+        caption:
+          'Thermal camera on the dual-servo pan-tilt head driven over USB serial from pantilt.py.',
+      },
+      {
+        src: '/projects/heimdall/servo.jpg',
+        caption: 'Pan-tilt mechanics and servo mounts under test before station integration.',
       },
       {
         src: '/projects/heimdall-operator-ui.jpg',
-        caption: 'Operator view over local Wi-Fi: victims, bearing, and thermal feed.',
+        caption: 'Operator UI over local Wi-Fi: victims, bearing, thermal MJPEG.',
       },
       {
         src: '/projects/heimdall-tag-board.jpg',
-        caption: 'ESP32 Tag prototype with Grove sensors, SOS button, and touch pads.',
+        caption: 'ESP32 Tag prototype — Grove sensors, SOS button, touch pads.',
       },
     ],
-    role: 'Hardware integration lead — Team 31',
+    role: 'Hardware integration lead — Team 31 (pantilt / thermal / station build)',
     timeline: 'Fall 2026 · Code Metal Forge · Finalist (Top 5 of 32)',
   },
   {
@@ -69,15 +76,17 @@ export const projects = [
     decisions:
       'Lid (A/C) and body (B/D) run as separate parallel processes. Within each process, tasks stay sequential; across processes they overlap after startupTasksComplete() so the next lot can enter while the first is still machining.\n\nResource seize/release is explicit: seize Mary only for load/unload, release her during the mill cut so she can move a finished lid while Cayenne is still cutting. Unload waits on the mill program finishing — annotated as a hard safety boundary in the BUMES script.\n\nRouting analysis rounded steps to 10 s, counted empty pallets as WIP, and flagged body machining at 340 s / utilization 1.00 as the cell bottleneck.',
     build:
-      'I wrote and annotated BUMES scripts for lid and body: AGV + Rosie move empty pallets onto the conveyor, Mary/Edie pull blanks from gravity feeders, load Haas toolpaths (MakeLid / MakeBody), unload, stage inventory, and hand off to Rosie for AssembleAToB.\n\nEpoch-timestamped BUMES reports logged every resourceSeize / urDashboard call so we could measure task times against the routing diagram instead of guessing where time went.',
+      'I wrote and annotated BUMES scripts for lid and body: AGV + Rosie move empty pallets onto the conveyor, Mary/Edie pull blanks from gravity feeders, load Haas toolpaths (MakeLid / MakeBody), unload, stage inventory, and hand off to Rosie for AssembleAToB.\n\nOn Mary’s Polyscope pendant I built the local UR program (thu8am_lab1): MoveJ to pHome / invA, MoveL approaches, Set DO[0] for the gripper, and beginForceSeek with If force() ≤ 65 so contact is sensed instead of hoping position alone seats the part. Program loops forever on the real robot for cell demos.\n\nEpoch-timestamped BUMES reports logged every resourceSeize / urDashboard call so we could measure task times against the routing diagram.',
     result:
-      'Body machining was the clear bottleneck (340 s, utilization 1.0). Assembly took 130 s once both parts arrived. The cell produced finished Cordganizers through coordinated mill tending and robotic assembly rather than one-off teleop demos.',
+      'Body machining was the clear bottleneck (340 s, utilization 1.0). Assembly took 130 s once both parts arrived. Force-seek on Mary kept press-fit assembly stable when fixture tolerance drifted.',
+    technical:
+      'Polyscope structure: Stack folders for palletize waypoints (StartPos / FromPos / ToPos), boolean part_found, Wait: 1.0 s settling, digital outputs for tooling, and force thresholding at 65 (UR force units) before committing the press. BUMES only calls urDashboard(.urp) after the matching resourceSeize — the pendant program owns the force logic.',
     tools: [
       'BUMES',
-      'Universal Robots',
+      'UR Polyscope',
+      'Force seek',
       'Haas CNC',
       'AGV / conveyor',
-      'Fusion 360 CAM',
       'Routing analysis',
     ],
     thumbnail: '/projects/cordganizer/thumb.jpg',
@@ -92,6 +101,11 @@ export const projects = [
       },
     ],
     images: [
+      {
+        src: '/projects/cordganizer/mary.jpg',
+        caption:
+          'Mary’s teach pendant — Polyscope program with MoveJ/MoveL, DO gripper control, and beginForceSeek / force() ≤ 65.',
+      },
       {
         src: '/projects/cordganizer/machine-still.jpg',
         caption: 'Haas mill cutting Cordganizer stock in the ADML cell.',
@@ -110,12 +124,8 @@ export const projects = [
         src: '/projects/cordganizer/timing-analysis.png',
         caption: 'Task-level timing table derived from epoch timestamps in the BUMES report.',
       },
-      {
-        src: '/projects/cordganizer/bumes-body-script.png',
-        caption: 'Body process script — Edie tends the longer mill program that sets cell takt.',
-      },
     ],
-    role: 'CIM process, BUMES scripting, and timing analysis',
+    role: 'CIM process, BUMES scripting, UR Polyscope, timing analysis',
     timeline: 'Fall 2026 · Boston University · ME345',
   },
   {
@@ -130,29 +140,39 @@ export const projects = [
     decisions:
       'Features were sized for vise jaws and robot fingers first, aesthetics second. Fusion 360 CAM owned the toolpaths; BUMES owned tending, transfer, and assembly order. We compared alternate production sequences specifically to cut idle time on the mills and arms.',
     build:
-      'Base and lid were CAM’d, simulated, then cut on Haas mills. Cell layout used three UR5 stations, two mills, conveyor, and a vision check. Teach-pendant waypoints and digital I/O handled machine-tending motions.',
+      'Base and lid were programmed in Fusion Manufacture: face, 2D adaptive / offset roughing, contour, bore, and chamfer ops (separate setups for Base_v2_CAM and lid). Simulated both, then cut HDPE on Haas mills. Cell used three UR5 stations, two mills, and conveyor for tending and assembly.',
     result:
-      'Finished HDPE assemblies came off the line with carabiner cutouts and mating features that robots could actually hold and press together — validated in CAM simulation and on the physical cell.',
+      'Finished HDPE assemblies with carabiner cutouts and mating features sized for vise + gripper — validated in CAM comparison mode and on the physical cell.',
+    technical:
+      'Lid setup example: Face → Adaptive Roughing → Offset Roughing → Contour ×3 → Chamfer. Base setup: Face → Offset Roughing → Bore → Chamfer. Stock comparison colorization in simulation catches leftover material before a tool crashes the vise.',
     tools: [
       'Fusion 360 CAM',
       'Haas CNC',
       'Universal Robots',
-      'Machine vision',
       'HDPE',
       'BUMES',
     ],
-    thumbnail: '/projects/epic-box-machined.jpg',
+    thumbnail: '/projects/epic-box/cnc-still.jpg',
     videos: [
       {
         src: '/projects/epic-box/cnc.mp4',
-        label: 'CNC machining of EPIC Box parts',
+        label: 'CNC machining of EPIC Box parts on the Haas',
       },
       {
         src: '/projects/epic-box-lid-simulation.mov',
-        label: 'CAM simulation — lid toolpath',
+        label: 'Fusion CAM simulation — lid toolpath',
       },
     ],
     images: [
+      {
+        src: '/projects/epic-box/cnc-still.jpg',
+        caption: 'Haas mill cutting EPIC Box HDPE stock.',
+      },
+      {
+        src: '/projects/epic-box-cam.jpg',
+        caption:
+          'Fusion Manufacture simulation — Base_v2_CAM (Face, Offset Roughing, Bore, Chamfer) in comparison mode.',
+      },
       {
         src: '/projects/epic-box-machined.jpg',
         caption:
@@ -163,58 +183,11 @@ export const projects = [
         caption: 'Exploded CAD of lid and base.',
       },
       {
-        src: '/projects/epic-box-cam.jpg',
-        caption: 'Fusion 360 CAM simulation for the base.',
-      },
-      {
         src: '/projects/epic-box-cell-layout.png',
         caption: 'ADML cell: three UR5s, two Haas mills, conveyor, annotated part flow.',
       },
-      {
-        src: '/projects/epic-box-ur-pendant.jpg',
-        caption: 'UR teach pendant — waypoints and I/O for tending.',
-      },
-      {
-        src: '/projects/epic-box-vision.jpg',
-        caption: 'Vision station checking parts on the line.',
-      },
     ],
     role: 'CAM, robotic process, and enclosure design',
-    timeline: 'Fall 2026 · Boston University',
-  },
-  {
-    id: 'ur5-force-assembly',
-    slug: 'ur5-force-guided-assembly',
-    title: 'UR5 Force-Guided Assembly',
-    category: 'Robotics · Force Control · Assembly',
-    description:
-      'Independently programmed and debugged a UR5 to align a lid, press-fit it onto an enclosure using force feedback, and unload the assembled part in a 60-second cycle.',
-    problem:
-      'Open-loop lid placement misses when parts sit a few millimeters off. Press-fitting by position alone either fails to seat or overloads the part and the robot. The cell needed a repeatable assemble-and-unload cycle without a human babysitting each press.',
-    decisions:
-      'Force feedback closed the loop on the press: approach in free space, then switch to force-guided seating so the lid finds the enclosure features instead of relying on perfect fixture tolerance. Cycle budget was hard-capped at 60 seconds including unload.',
-    build:
-      'I wrote and stepped through the UR program on the teach pendant — waypoint alignment, force-mode press, success/fail thresholds, and unload to the outbound pose. Debugging focused on contact detection false positives and press depth that looked fine in air but crushed soft stock.',
-    result:
-      'Stable 60-second cycles: align → force-guided press-fit → unload. The same force-guided mindset carried into larger CIM assembly sequences where position-only mating was not enough.',
-    tools: [
-      'UR5',
-      'Force feedback',
-      'Teach pendant',
-      'Assembly sequencing',
-    ],
-    thumbnail: '/projects/epic-box-ur-pendant.jpg',
-    images: [
-      {
-        src: '/projects/epic-box-ur-pendant.jpg',
-        caption: 'UR teach pendant used to program and debug force-guided assembly motions.',
-      },
-      {
-        src: '/projects/epic-box-machined.jpg',
-        caption: 'Enclosure geometry the lid had to align to and press-fit against.',
-      },
-    ],
-    role: 'Independent UR5 programming and debug',
     timeline: 'Fall 2026 · Boston University',
   },
   {
@@ -225,27 +198,43 @@ export const projects = [
     description:
       'Eligibility linter and patient finder across 1,011 recruiting Massachusetts cancer trials. 2nd Place — Health & Biotech at Hackachusetts × DS+X.',
     problem:
-      'Trial eligibility text quietly excludes people. Protocol teams rarely see which rules drive the exclusion, or how those rules sit against county health data.',
+      'Trial protocols copy exclusions forward. Rules like “known HIV infection” or “must speak English” often are not science — they shut people out before anyone looks at their cancer. Protocol teams rarely see how often each rule appears or what it costs by county.',
     decisions:
-      'Parse ClinicalTrials.gov criteria, flag restrictive language, and suggest more inclusive wording grounded in guidance. Pair barriers with CDC PLACES and MassGIS county layers so the map is not just geography — it is exclusion intensity next to health burden.',
+      'Treat eligibility as a linter problem: extract restriction types from ClinicalTrials.gov free text, score them against FDA / guidance citations, and put rates next to CDC PLACES health and MassGIS environmental-justice layers.\n\nScreens: Landscape (13 restriction categories × 1,011 trials), Map (county rates + “who gets turned away” walkthrough), Linter (Claude or in-browser keyword rules), Find Trials (patient-side prototype).',
     build:
-      'I led front-end and UI: landscape of restriction rates, county map, and patient-facing finder. Built in ~11 hours with Andria Chen, Arush Vyas, and Namig Mirzayev.',
+      'I led front-end and UI design for the Next.js dashboard — landscape bars, county map panel, linter layout, and patient finder. Built in ~11 hours with Andria Chen, Arush Vyas, and Namig Mirzayev.\n\nExtraction used the same prompt path as the offline corpus; every flag must quote the criteria word-for-word before it shows. Keyword-rules mode keeps confidential drafts in-browser.',
     result:
-      'Held-out extraction hit 92% recall and 98% precision on 10 unseen trials. 2nd Place, Health & Biotech Track.',
-    tools: ['Next.js', 'ClinicalTrials.gov', 'CDC PLACES', 'MassGIS', 'UI design'],
-    thumbnail: '/projects/threshold-home.png',
+      'Held-out set (10 trials labeled blind after prompt tuning): 46/50 restrictions caught (recall 92%), 46/47 flags correct (precision 98%), F1 0.95. Across the corpus: 22% of phase 1–3 drug trials still exclude HIV outright; ~30% of supportive-care studies require a specific language. 2nd Place, Health & Biotech.',
+    technical:
+      'Human-labeled answer key on 42 trials (seeded sample by phase/sponsor/cancer + held-out 10). Weakest category called out openly (prior malignancy recall ~72% on the full 42). Data: ClinicalTrials.gov API v2, CDC PLACES 2023, MassGIS EJ 2020. Live app: patient-eligibility-linter.vercel.app.',
+    tools: [
+      'Next.js',
+      'ClinicalTrials.gov API',
+      'CDC PLACES',
+      'MassGIS',
+      'Claude extraction',
+      'UI design',
+    ],
+    thumbnail: '/projects/threshold/main.png',
     images: [
       {
-        src: '/projects/threshold-home.png',
-        caption: 'Threshold home — Fair eligibility. More possibility.',
+        src: '/projects/threshold/main.png',
+        caption: 'Threshold — Fair eligibility. More possibility.',
       },
       {
-        src: '/projects/threshold-landscape.png',
-        caption: 'Restriction rates across 1,011 Massachusetts-linked trials.',
+        src: '/projects/threshold/landscape-desktop.png',
+        caption:
+          'Desktop Landscape — restriction rates across 1,011 MA cancer trials (HIV callout 34.3%).',
       },
       {
-        src: '/projects/threshold-map.png',
-        caption: 'County map: exclusions vs health and environmental-justice data.',
+        src: '/projects/threshold/map-desktop.png',
+        caption:
+          'Desktop Map — county HIV restriction % with Suffolk detail (945 recruiting trials).',
+      },
+      {
+        src: '/projects/threshold/linter-desktop.png',
+        caption:
+          'Desktop Criteria linter — paste inclusion/exclusion, Claude or keyword engine.',
       },
     ],
     role: 'Front-end and UI design lead — Team Threshold',
@@ -424,6 +413,49 @@ export const projects = [
         youtubeEmbedUrl: 'https://www.youtube.com/embed/upo_cHmujE0',
       },
     },
+  },
+  {
+    id: 'four-bar',
+    slug: 'musical-four-bar-linkage',
+    title: 'Musical Four-Bar Linkage',
+    category: 'CAD · Kinematics · Laser Cutting',
+    description:
+      'Crank-rocker four-bar whose links are laser-cut musical silhouettes — treble, bass, quarter note, and double eighth — modeled in SolidWorks and cut from DXF.',
+    problem:
+      'A four-bar is easy to draw and hard to get right: wrong link lengths lock, branch flips, or the transmission angle collapses. I wanted a mechanism that was both a valid Grashof crank-rocker and a laser-cuttable set of musical shapes.',
+    decisions:
+      'Model each link as its own SolidWorks part (treble_clef, bass_clef, quarter_note, double_eighth_note), assemble with pin joints, then export DXFs for laser cutting. Keep the kinematic skeleton a classic crank-rocker so the coupler (double eighth) can swing continuously while the rocker (treble) oscillates.',
+    build:
+      'Parts + Assem_final assembly in SolidWorks. DXF exports of the silhouettes for the laser. The interactive model below solves Freudenstein / position analysis for θ₃ and θ₄ given crank θ₂ so you can scrub the same motion the hardware is built for.',
+    result:
+      'A working CAD assembly and cut-ready profiles that satisfy Grashof (s+ℓ < p+q) with a usable transmission angle through the crank cycle.',
+    technical:
+      'Position analysis from the Freudenstein loop: known θ₂ and link lengths a,b,c,d → θ₄ from the quadratic in tan(θ₄/2), then θ₃ from the coupler vector. Interactive panel reports θ₂/θ₃/θ₄ and transmission angle live.',
+    tools: [
+      'SolidWorks',
+      'Assemblies',
+      'DXF / laser cutting',
+      'Four-bar kinematics',
+      'Grashof',
+    ],
+    thumbnail: '/projects/four-bar/treble.svg',
+    interactive: 'four-bar',
+    images: [
+      {
+        src: '/projects/four-bar/treble.svg',
+        caption: 'Laser-cut DXF silhouette — treble clef (rocker link).',
+      },
+      {
+        src: '/projects/four-bar/bass.svg',
+        caption: 'Laser-cut DXF silhouette — bass clef (ground reference).',
+      },
+      {
+        src: '/projects/four-bar/quarter.svg',
+        caption: 'Laser-cut DXF silhouette — quarter note (crank).',
+      },
+    ],
+    role: 'CAD course project — ME357',
+    timeline: 'Fall 2025 · Boston University',
   },
   {
     id: 'gearbox',

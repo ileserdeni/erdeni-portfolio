@@ -7,6 +7,7 @@ import Button from '../components/ui/Button';
 import GalleryFigure from '../components/ui/GalleryFigure';
 import ProjectVideo from '../components/ui/ProjectVideo';
 import ProjectCaseStudy from '../components/projects/ProjectCaseStudy';
+import FourBarInteractive from '../components/projects/FourBarInteractive';
 
 function Section({ label, children }) {
   if (!children) return null;
@@ -72,7 +73,11 @@ export default function ProjectDetail() {
       : [];
 
   const hasEngineeringSections =
-    project.problem || project.decisions || project.build || project.result;
+    project.problem ||
+    project.decisions ||
+    project.build ||
+    project.result ||
+    project.technical;
 
   return (
     <motion.article
@@ -108,6 +113,12 @@ export default function ProjectDetail() {
         {project.description}
       </p>
 
+      {project.interactive === 'four-bar' && (
+        <div className="mt-10">
+          <FourBarInteractive />
+        </div>
+      )}
+
       {videos.length > 0 && (
         <div className="mt-10 space-y-6">
           {videos.map((item) => (
@@ -130,6 +141,11 @@ export default function ProjectDetail() {
           <Section label="Result">
             <Paragraphs text={project.result} />
           </Section>
+          {project.technical && (
+            <Section label="Technical">
+              <Paragraphs text={project.technical} />
+            </Section>
+          )}
         </>
       ) : (
         <div className="mt-12 max-w-3xl space-y-5">

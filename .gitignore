@@ -8,3 +8,9 @@ public/projects/cordganizer-machining-sequence.MOV
 public/projects/cordganizer-assembly.MOV
 public/projects/heimdall-demo.mov
 public/projects/epic-box-cnc.MOV
+
+# SolidWorks sources (interactive model is the web kinematic viewer)
+public/*.SLDASM*
+public/*.SLDPRT*
+public/cordganizer_mary.JPG
+public/thershold-main-photo.png
