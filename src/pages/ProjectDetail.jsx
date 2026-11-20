@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { getProjectBySlug } from '../data/projects';
@@ -7,7 +7,10 @@ import Button from '../components/ui/Button';
 import GalleryFigure from '../components/ui/GalleryFigure';
 import ProjectVideo from '../components/ui/ProjectVideo';
 import ProjectCaseStudy from '../components/projects/ProjectCaseStudy';
-import FourBarInteractive from '../components/projects/FourBarInteractive';
+
+const FourBarInteractive = lazy(
+  () => import('../components/projects/FourBarInteractive'),
+);
 
 function Section({ label, children }) {
   if (!children) return null;
@@ -115,7 +118,15 @@ export default function ProjectDetail() {
 
       {project.interactive === 'four-bar' && (
         <div className="mt-10">
-          <FourBarInteractive />
+          <Suspense
+            fallback={
+              <div className="rounded-xl border border-border bg-surface-raised px-4 py-16 text-center font-mono text-xs text-zinc-500">
+                Loading 3D assembly…
+              </div>
+            }
+          >
+            <FourBarInteractive />
+          </Suspense>
         </div>
       )}
 

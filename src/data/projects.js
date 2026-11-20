@@ -426,11 +426,11 @@ export const projects = [
     decisions:
       'Model each link as its own SolidWorks part (treble_clef, bass_clef, quarter_note, double_eighth_note), assemble with pin joints, then export DXFs for laser cutting. Keep the kinematic skeleton a classic crank-rocker so the coupler (double eighth) can swing continuously while the rocker (treble) oscillates.',
     build:
-      'Parts + Assem_final assembly in SolidWorks. DXF exports of the silhouettes for the laser. The interactive model below solves Freudenstein / position analysis for θ₃ and θ₄ given crank θ₂ so you can scrub the same motion the hardware is built for.',
+      'Parts + Assem_final in SolidWorks (treble_clef, bass_clef, quarter_note, double_eighth_note + McMaster pins/spacers). DXF exports drive laser cutting. The 3D viewer below extrudes those same SolidWorks profiles to plate thickness and drives the assembly with the measured pin-hole lengths.',
     result:
-      'A working CAD assembly and cut-ready profiles that satisfy Grashof (s+ℓ < p+q) with a usable transmission angle through the crank cycle.',
+      'A working CAD assembly and cut-ready profiles that satisfy Grashof (s+ℓ < p+q). Interactive 3D uses the real DXF outlines from Assem_final — not a schematic stick figure.',
     technical:
-      'Position analysis from the Freudenstein loop: known θ₂ and link lengths a,b,c,d → θ₄ from the quadratic in tan(θ₄/2), then θ₃ from the coupler vector. Interactive panel reports θ₂/θ₃/θ₄ and transmission angle live.',
+      'Pin spacing from DXF circles: crank 33.5 mm (eighth), coupler 66.7 mm (quarter), rocker 88.6 mm (treble), ground 110.9 mm (bass). Position analysis: Freudenstein loop → θ₄, θ₃ from crank θ₂.',
     tools: [
       'SolidWorks',
       'Assemblies',
@@ -438,20 +438,24 @@ export const projects = [
       'Four-bar kinematics',
       'Grashof',
     ],
-    thumbnail: '/projects/four-bar/treble.svg',
+    thumbnail: '/projects/four-bar/treble_part.svg',
     interactive: 'four-bar',
     images: [
       {
-        src: '/projects/four-bar/treble.svg',
-        caption: 'Laser-cut DXF silhouette — treble clef (rocker link).',
+        src: '/projects/four-bar/treble_part.svg',
+        caption: 'SolidWorks → DXF laser profile — treble clef (rocker), pin holes at 88.6 mm.',
       },
       {
-        src: '/projects/four-bar/bass.svg',
-        caption: 'Laser-cut DXF silhouette — bass clef (ground reference).',
+        src: '/projects/four-bar/bass_part.svg',
+        caption: 'SolidWorks → DXF laser profile — bass clef (ground), pin holes at 110.9 mm.',
       },
       {
-        src: '/projects/four-bar/quarter.svg',
-        caption: 'Laser-cut DXF silhouette — quarter note (crank).',
+        src: '/projects/four-bar/quarter_part.svg',
+        caption: 'SolidWorks → DXF laser profile — quarter note (coupler), pin holes at 66.7 mm.',
+      },
+      {
+        src: '/projects/four-bar/eighth_part.svg',
+        caption: 'SolidWorks → DXF laser profile — double eighth (crank), pin holes at 33.5 mm.',
       },
     ],
     role: 'CAD course project — ME357',
