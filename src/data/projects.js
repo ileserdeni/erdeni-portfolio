@@ -420,17 +420,15 @@ export const projects = [
     title: 'Musical Four-Bar Linkage',
     category: 'CAD · Kinematics · Laser Cutting',
     description:
-      'Crank-rocker four-bar whose links are laser-cut musical silhouettes — treble, bass, quarter note, and double eighth — modeled in SolidWorks and cut from DXF.',
+      'Crank-rocker four-bar with laser-cut musical-note links — modeled and assembled in SolidWorks (Assem_final), then cut from DXF.',
     problem:
       'A four-bar is easy to draw and hard to get right: wrong link lengths lock, branch flips, or the transmission angle collapses. I wanted a mechanism that was both a valid Grashof crank-rocker and a laser-cuttable set of musical shapes.',
     decisions:
-      'Model each link as its own SolidWorks part (treble_clef, bass_clef, quarter_note, double_eighth_note), assemble with pin joints, then export DXFs for laser cutting. Keep the kinematic skeleton a classic crank-rocker so the coupler (double eighth) can swing continuously while the rocker (treble) oscillates.',
+      'Model the full assembly in SolidWorks with pin joints and McMaster hardware, then export DXFs for laser cutting. Keep the kinematic skeleton a classic crank-rocker so one link can crank continuously while the rocker oscillates.',
     build:
-      'Parts + Assem_final in SolidWorks (treble_clef, bass_clef, quarter_note, double_eighth_note + McMaster pins/spacers). DXF exports drive laser cutting. The 3D viewer below extrudes those same SolidWorks profiles to plate thickness and drives the assembly with the measured pin-hole lengths.',
+      'Assem_final in SolidWorks: musical-note plates, spacers, screws, washers, and locknuts. The interactive viewer below is the exported GLB of that assembly; the clip shows the CAD motion study.',
     result:
-      'A working CAD assembly and cut-ready profiles that satisfy Grashof (s+ℓ < p+q). Interactive 3D uses the real DXF outlines from Assem_final — not a schematic stick figure.',
-    technical:
-      'Pin spacing from DXF circles: crank 33.5 mm (eighth), coupler 66.7 mm (quarter), rocker 88.6 mm (treble), ground 110.9 mm (bass). Position analysis: Freudenstein loop → θ₄, θ₃ from crank θ₂.',
+      'A complete SolidWorks assembly that satisfies Grashof and is ready to laser-cut and pin together.',
     tools: [
       'SolidWorks',
       'Assemblies',
@@ -438,24 +436,12 @@ export const projects = [
       'Four-bar kinematics',
       'Grashof',
     ],
-    thumbnail: '/projects/four-bar/treble_part.svg',
+    thumbnail: '/projects/four-bar/thumb.jpg',
     interactive: 'four-bar',
-    images: [
+    videos: [
       {
-        src: '/projects/four-bar/treble_part.svg',
-        caption: 'SolidWorks → DXF laser profile — treble clef (rocker), pin holes at 88.6 mm.',
-      },
-      {
-        src: '/projects/four-bar/bass_part.svg',
-        caption: 'SolidWorks → DXF laser profile — bass clef (ground), pin holes at 110.9 mm.',
-      },
-      {
-        src: '/projects/four-bar/quarter_part.svg',
-        caption: 'SolidWorks → DXF laser profile — quarter note (coupler), pin holes at 66.7 mm.',
-      },
-      {
-        src: '/projects/four-bar/eighth_part.svg',
-        caption: 'SolidWorks → DXF laser profile — double eighth (crank), pin holes at 33.5 mm.',
+        src: '/projects/four-bar/assembly.mp4',
+        label: 'Assem_final — SolidWorks motion / assembly view',
       },
     ],
     role: 'CAD course project — ME357',

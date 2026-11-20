@@ -47,7 +47,7 @@ export const experience = [
     location: 'Boston, MA',
     period: 'January 2025 — Present',
     bullets: [
-      'Support board operations, meeting records, and event coordination for the Russian-speaking student community.',
+      'Book venues and rooms for club events and help with day-to-day administrative organization.',
     ],
   },
   {
@@ -56,5 +56,9 @@ export const experience = [
     organization: 'EY-Parthenon',
     location: 'Almaty, Kazakhstan',
     period: 'June 2025 — July 2025',
+    bullets: [
+      'Supported buy-side due diligence for a buy-side transaction, scrutinizing 4 years of financial statements, and contributing to databooks utilized by senior associates in client presentations.',
+      'Conducted comprehensive research and produced bilingual (English/Russian) 8-page industry reports achieving notable engagement on LinkedIn with 287 reactions, 5 comments, and 7 reposts.',
+    ],
   },
 ];
