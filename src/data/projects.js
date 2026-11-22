@@ -159,6 +159,10 @@ export const projects = [
         label: 'CNC machining of EPIC Box parts on the Haas',
       },
       {
+        src: '/projects/epic-box/base-simulation.mp4',
+        label: 'Fusion CAM simulation — Base_v2_CAM (Face, Offset Roughing, Bore, Chamfer)',
+      },
+      {
         src: '/projects/epic-box-lid-simulation.mov',
         label: 'Fusion CAM simulation — lid toolpath',
       },
@@ -167,11 +171,6 @@ export const projects = [
       {
         src: '/projects/epic-box/cnc-still.jpg',
         caption: 'Haas mill cutting EPIC Box HDPE stock.',
-      },
-      {
-        src: '/projects/epic-box-cam.jpg',
-        caption:
-          'Fusion Manufacture simulation — Base_v2_CAM (Face, Offset Roughing, Bore, Chamfer) in comparison mode.',
       },
       {
         src: '/projects/epic-box-machined.jpg',
