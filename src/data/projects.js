@@ -283,46 +283,51 @@ export const projects = [
   {
     id: 'microlens-nanoscribe',
     slug: 'microlens-fabrication-nanoscribe',
-    title: 'Microlens Fabrication Using Nanoscribe',
-    category: 'Microfabrication · Optics',
+    title: 'Fluidically Shaped Microlenses',
+    category: 'Microfabrication · Optics · Fluidic Shaping',
     description:
-      'Two-photon polymerization process for precision microlenses and lab fixtures on BU’s Nanoscribe — aimed at repeatable micro-optics, not one-off prints.',
+      'Nanoscribe-printed frames and stamps set precise boundaries; microlenses are formed by fluidic shaping — deploying polymers such as RT and Vedarosa in density-matched liquids (Frumkin method), not by printing the optic itself.',
     problem:
-      'Microlenses for fluid-interface experiments need feature sizes and surface quality that ordinary 3D printers cannot hit. Process parameters that work once still fail the next day without a locked workflow.',
+      'Smooth optical surfaces at micro scale are hard to get from direct additive manufacturing. Ordinary prints leave stair-steps and roughness; polishing each tiny lens is not a process. Fluidic shaping can make optical-quality free surfaces — but only if the bounding frame pins the liquid with accurate geometry.',
     decisions:
-      'Treat Nanoscribe as a manufacturing process: CAD prep, print parameters, material choice, and inspection under microscope before claiming a “good” lens. Completed 9+ hours of required training before unsupervised runs.',
+      'Split the stack: Nanoscribe two-photon polymerization builds the rigid frame/stamp (rings, pads, arrays) that define pinning lines and apertures. The lens body is shaped as a liquid polymer volume under near-neutral buoyancy in an immiscible immersion liquid, then cured — following Valeri Frumkin’s fluidic-shaping approach. Density matching cancels gravity so surface tension and the frame geometry set the optic.\n\nCompleted 9+ hours of Nanoscribe training before unsupervised runs so fixture prints are repeatable, not one-offs.',
     build:
-      'CAD for nanoscale printability, parameter sweeps, polymer comparisons for lens fabrication, and fixtures that support forming lenses at a fluid interface.',
+      'CAD fixtures for two-photon printability; parameter sweeps and resin choice for frame fidelity; microscope inspection of pin edges and apertures. On the wet bench: density-matched immersion baths, inject/aspirate curable polymers (e.g. RT, Vedarosa) into the printed boundaries, cure, and compare polymers for lens forming at the fluid interface.',
     result:
-      'Working high-resolution microstructures and an improving process window for microlens arrays used in the interfacial optics workstream.',
+      'Working frame/stamp prints plus fluidically shaped microlenses for the interfacial optics workstream — optics from liquid interfaces, structure from Nanoscribe.',
+    technical:
+      'In Frumkin fluidic shaping, a curable lens liquid is pinned in a bounding frame submerged in an immersion liquid of matched density. Neutral buoyancy removes gravity; injected volume + frame geometry set spherical/aspherical caps; curing locks nanometric surface quality without mechanical polishing. My Nanoscribe parts are those bounding frames — not the cured lens volume.',
     tools: [
-      'Nanoscribe',
+      'Nanoscribe (fixtures)',
+      'Fluidic shaping',
+      'Density-matched liquids',
+      'RT / Vedarosa',
       'Two-photon polymerization',
-      'Microlenses',
-      'Microfabrication',
       'CAD',
+      'Microscope inspection',
     ],
     thumbnail: '/projects/Mircolense_1.JPG',
     images: [
       {
         src: '/projects/microlense1.JPG',
-        caption: 'Nanoscribe-fabricated microstructure for microlens process development.',
+        caption:
+          'Nanoscribe-printed microstructure used as a frame/stamp for fluidic lens forming — not the optic itself.',
       },
       {
         src: '/projects/microlense2.JPG',
-        caption: 'Microscope inspection of print quality.',
+        caption: 'Microscope inspection of printed fixture edges and apertures.',
       },
       {
         src: '/projects/Mircolense_1.JPG',
-        caption: 'Nanoscribe Photonic Professional GT chamber during setup.',
+        caption: 'Nanoscribe Photonic Professional GT chamber during fixture print setup.',
       },
       {
         src: '/projects/Microlense_2.JPG',
-        caption: 'Printed structure on glass next to a finger for scale.',
+        caption: 'Printed fixture structure on glass next to a finger for scale.',
       },
       {
         src: '/projects/Microlense_4.JPG',
-        caption: 'NanoWrite interface and live camera during a multilens job.',
+        caption: 'NanoWrite interface during a multi-feature fixture print job.',
       },
     ],
     role: 'Research Assistant — Applied Interfacial Phenomena Lab',

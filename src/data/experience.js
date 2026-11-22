@@ -16,7 +16,7 @@ export const experience = [
     location: 'Boston, MA',
     period: 'September 2025 — Present',
     bullets: [
-      'Independently lead a micro-optics research project: fabricate microlens arrays and fixtures for forming lenses at a fluid interface using Nanoscribe two-photon polymerization, and compare polymers for lens fabrication.',
+      'Independently lead a micro-optics research project: print Nanoscribe frames/stamps that set precise boundaries for fluidic shaping, then form microlenses by deploying polymers (e.g. RT, Vedarosa) in density-matched liquids and compare polymers for lens forming.',
       'Develop a soft robotic gripper that combines an internal skeleton with a flexible polymer shell.',
     ],
   },
