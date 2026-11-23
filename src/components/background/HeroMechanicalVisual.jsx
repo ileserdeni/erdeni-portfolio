@@ -91,7 +91,7 @@ const outerR = (r) => r * 1.06;
 
 const LARGE = { x: 238, y: 218 };
 
-// Separated composition — no overlap, consistent gaps
+// Separated composition - no overlap, consistent gaps
 const TOP_LEFT = {
   x: LARGE.x + (outerR(GEARS.large.pitchRadius) + GAP + outerR(GEARS.small.pitchRadius)) * Math.cos((-135 * Math.PI) / 180),
   y: LARGE.y + (outerR(GEARS.large.pitchRadius) + GAP + outerR(GEARS.small.pitchRadius)) * Math.sin((-135 * Math.PI) / 180),

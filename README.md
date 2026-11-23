@@ -1,4 +1,4 @@
-# Erdeni Iles — Portfolio
+# Erdeni Iles - Portfolio
 
 A sleek, minimal personal portfolio for a mechanical engineering student. Built with React, Vite, Tailwind CSS, and Framer Motion.
 

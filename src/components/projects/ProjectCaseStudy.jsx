@@ -76,17 +76,17 @@ export default function ProjectCaseStudy({ project }) {
       </div>
 
       <div className="mt-16 space-y-16">
-        <CaseStudySection label="01 — Overview" title="What we built">
+        <CaseStudySection label="01 / Overview" title="What we built">
           <p className="max-w-3xl text-base leading-relaxed text-muted sm:text-lg">
             {cs.overview}
           </p>
         </CaseStudySection>
 
-        <CaseStudySection label="02 — System" title="How it works">
+        <CaseStudySection label="02 / System" title="How it works">
           <SystemFlow steps={cs.systemFlow} />
         </CaseStudySection>
 
-        <CaseStudySection label="03 — Mechanical" title="Housing & fabrication">
+        <CaseStudySection label="03 / Mechanical" title="Housing & fabrication">
           <p className="max-w-3xl text-sm leading-relaxed text-muted sm:text-base">
             {cs.housing.description}
           </p>
@@ -96,13 +96,13 @@ export default function ProjectCaseStudy({ project }) {
                 key={item.label}
                 src={item.src}
                 label={item.label}
-                title={`${project.title} — ${item.label}`}
+                title={`${project.title} - ${item.label}`}
               />
             ))}
           </div>
         </CaseStudySection>
 
-        <CaseStudySection label="04 — Hardware" title="Key components">
+        <CaseStudySection label="04 / Hardware" title="Key components">
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {cs.components.map((component) => (
               <div
@@ -118,7 +118,7 @@ export default function ProjectCaseStudy({ project }) {
           </div>
         </CaseStudySection>
 
-        <CaseStudySection label="05 — Electronics" title="Wiring & integration">
+        <CaseStudySection label="05 / Electronics" title="Wiring & integration">
           <p className="max-w-3xl text-sm leading-relaxed text-muted sm:text-base">
             {cs.wiring}
           </p>
@@ -127,27 +127,27 @@ export default function ProjectCaseStudy({ project }) {
               <LabeledImage
                 src={cs.wiringImage}
                 label="Consolidated baseplate wiring"
-                title={`${project.title} — wiring`}
+                title={`${project.title} - wiring`}
               />
             </div>
           )}
         </CaseStudySection>
 
-        <CaseStudySection label="06 — Architecture" title="System block diagram">
+        <CaseStudySection label="06 / Architecture" title="System block diagram">
           <LabeledImage
             src={cs.blockDiagram}
             label="Primary information flow for gameplay loop"
-            title={`${project.title} — block diagram`}
+            title={`${project.title} - block diagram`}
           />
         </CaseStudySection>
 
-        <CaseStudySection label="07 — Iteration" title="Prototype evolution">
+        <CaseStudySection label="07 / Iteration" title="Prototype evolution">
           <p className="max-w-3xl text-sm leading-relaxed text-muted sm:text-base">
             {cs.prototypeIteration}
           </p>
         </CaseStudySection>
 
-        <CaseStudySection label="08 — Testing" title="Results & limits">
+        <CaseStudySection label="08 / Testing" title="Results & limits">
           <p className="max-w-3xl text-sm leading-relaxed text-muted sm:text-base">
             {cs.testingResults}
           </p>
@@ -155,28 +155,28 @@ export default function ProjectCaseStudy({ project }) {
             <div className="mt-6">
               <LabeledImage
                 src={cs.testingImage}
-                label="Switch reliability testing — actuation vs. release"
-                title={`${project.title} — testing`}
+                label="Switch reliability testing - actuation vs. release"
+                title={`${project.title} - testing`}
               />
             </div>
           )}
         </CaseStudySection>
 
-        <CaseStudySection label="09 — Role" title="My contribution">
+        <CaseStudySection label="09 / Role" title="My contribution">
           <p className="max-w-3xl text-sm leading-relaxed text-muted sm:text-base">
             {cs.contribution}
           </p>
         </CaseStudySection>
 
         {cs.prototypeDemo && (
-          <CaseStudySection label="10 — Demo" title="Working final product">
+          <CaseStudySection label="10 / Demo" title="Working final product">
             <p className="max-w-3xl text-sm leading-relaxed text-muted sm:text-base">
               {cs.prototypeDemo.description}
             </p>
             <div className="mx-auto mt-6 max-w-4xl">
               <YouTubeEmbed
                 src={cs.prototypeDemo.youtubeEmbedUrl}
-                title={`${project.title} — prototype demo`}
+                title={`${project.title} - prototype demo`}
               />
             </div>
           </CaseStudySection>

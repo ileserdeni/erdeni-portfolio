@@ -19,12 +19,12 @@ export default function Contact() {
   return (
     <SectionWrapper id="contact" className="border-t border-border-subtle py-24 sm:py-28">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
-        <SectionHeading label="05 — Contact" title="Let's connect" />
+        <SectionHeading label="05 / Contact" title="Let's connect" />
 
         <div className="grid gap-8 lg:grid-cols-2">
           <p className="max-w-md text-base leading-relaxed text-muted">
             I'm open to internship opportunities, research collaborations, and
-            conversations about mechanical design and hardware. Reach out — I'd
+            conversations about mechanical design and hardware. Reach out - I'd
             love to hear from you.
           </p>
 

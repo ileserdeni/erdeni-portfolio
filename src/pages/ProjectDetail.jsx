@@ -40,8 +40,8 @@ export default function ProjectDetail() {
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title = project
-      ? `${project.title} — Erdeni Iles`
-      : 'Project Not Found — Erdeni Iles';
+      ? `${project.title} - Erdeni Iles`
+      : 'Project Not Found - Erdeni Iles';
   }, [project, slug]);
 
   if (!project) {
@@ -179,7 +179,7 @@ export default function ProjectDetail() {
                 key={`${image.src}-${index}`}
                 src={image.src}
                 caption={image.caption}
-                title={`${project.title} — ${index + 1}`}
+                title={`${project.title} - ${index + 1}`}
                 className={galleryImages.length === 1 ? 'sm:col-span-2' : ''}
               />
             ))}

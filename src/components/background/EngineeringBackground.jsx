@@ -43,7 +43,7 @@ export default function EngineeringBackground() {
       {/* Left subtle glow */}
       <div className="absolute -left-24 bottom-0 h-72 w-72 rounded-full bg-accent/3 blur-3xl" />
 
-      {/* Vignette — softer on right to let graphic breathe */}
+      {/* Vignette - softer on right to let graphic breathe */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#09090b]/80 via-transparent to-[#09090b]" />
       <div className="absolute inset-0 bg-gradient-to-r from-[#09090b] via-[#09090b]/50 to-transparent md:via-[#09090b]/25" />
     </div>

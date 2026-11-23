@@ -5,17 +5,17 @@ export const projects = [
     title: 'Heimdall',
     category: 'Hackathon · Search & Rescue · Embedded',
     description:
-      'Offline search-and-rescue station that finds coded acoustic beacons without GPS or cellular, then aims a thermal camera at the highest-priority victim. Finalist — Top 5 of 32 at Code Metal Forge.',
+      'Offline search-and-rescue station that finds coded acoustic beacons without GPS or cellular, then aims a thermal camera at the highest-priority victim. Finalist - Top 5 of 32 at Code Metal Forge.',
     problem:
-      'In a collapsed building or wildfire zone, phones may have no signal and GPS can be useless indoors. Rescuers still need a way to find people who can make sound — and aim a thermal camera at the right direction without guessing.',
+      'In a collapsed building or wildfire zone, phones may have no signal and GPS can be useless indoors. Rescuers still need a way to find people who can make sound - and aim a thermal camera at the right direction without guessing.',
     decisions:
       'No cloud, no cellular. Victims emit HEIMDALL-AC1 acoustic chirps from a phone web app or ESP32 Tag. A Seeed reSpeaker XVF3800 4-mic array feeds GCC-PHAT bearing estimation; a servo pan-tilt aims the thermal camera.\n\nI owned station hardware: Raspberry Pi 5 integration, mic-array geometry/mount, thermal + pan-tilt (Seeeduino serial), soldering, cable routing, and live-demo wiring that had to survive being carried.',
     build:
-      'Station runs a modular FastAPI “Ear” on the Pi (HTTPS over a local HEIMDALL hotspot). Audio path: XVF3800 USB DFU firmware → 6ch @ 16 kHz → decode on the conference/ASR channel → GCC-PHAT on the four raw mics (6.65 cm square, cable = rear).\n\nPan-tilt auto mode ranks confirmed victims (critical > injured > no_response > ok), ignores low-confidence bearings, and holds ≥1.5 s between moves so servo noise does not wreck the mic array. Relayed frames publish no bearing — auto-aim never points at the relay phone.',
+      'Station runs a modular FastAPI “Ear” on the Pi (HTTPS over a local HEIMDALL hotspot). Audio path: XVF3800 USB DFU firmware → 6ch @ 16 kHz → decode on the conference/ASR channel → GCC-PHAT on the four raw mics (6.65 cm square, cable = rear).\n\nPan-tilt auto mode ranks confirmed victims (critical > injured > no_response > ok), ignores low-confidence bearings, and holds ≥1.5 s between moves so servo noise does not wreck the mic array. Relayed frames publish no bearing - auto-aim never points at the relay phone.',
     result:
       'At 4 m: 95% decode rate, mean bearing 89.5° for a source at 90°. At 2 m calibration: +90° → 86.6 ± 0.9°, −90° → −99.7 ± 0.5° with the phone speaker aimed at the puck. Line-of-sight and speaker orientation mattered more than fancy post-processing.',
     technical:
-      'Bearing estimator: band-limited cross-spectrum with partial PHAT weighting (β = 0.7, tuned on 2 m / 4 m recordings — full PHAT was brittle in room noise). Far-field τᵢⱼ = −(pᵢ − pⱼ) · û / c is scored on an upsampled lag grid; coarse curve over −180…180°, then optional multi-frame accumulation per victim id.\n\nMic coordinates (m, front = +x / 0°): ch4 (+0.03325, −0.03325), ch5 (+0.03325, +0.03325), ch2 (−0.03325, +0.03325), ch3 (−0.03325, −0.03325). bearing_offset_deg corrects mount error. New IDs stay unconfirmed until a second frame within 60 s.',
+      'Bearing estimator: band-limited cross-spectrum with partial PHAT weighting (β = 0.7, tuned on 2 m / 4 m recordings - full PHAT was brittle in room noise). Far-field τᵢⱼ = −(pᵢ − pⱼ) · û / c is scored on an upsampled lag grid; coarse curve over −180…180°, then optional multi-frame accumulation per victim id.\n\nMic coordinates (m, front = +x / 0°): ch4 (+0.03325, −0.03325), ch5 (+0.03325, +0.03325), ch2 (−0.03325, +0.03325), ch3 (−0.03325, −0.03325). bearing_offset_deg corrects mount error. New IDs stay unconfirmed until a second frame within 60 s.',
     tools: [
       'Raspberry Pi 5',
       'reSpeaker XVF3800',
@@ -29,7 +29,7 @@ export const projects = [
     videos: [
       {
         src: '/projects/heimdall/demo.mp4',
-        label: 'Live demo — acoustic decode and thermal pan-tilt',
+        label: 'Live demo - acoustic decode and thermal pan-tilt',
       },
     ],
     images: [
@@ -41,7 +41,7 @@ export const projects = [
       {
         src: '/projects/heimdall/wiring.jpg',
         caption:
-          'Wiring harness — Pi power/data, mic USB (XMOS port), Seeeduino for pan-tilt/knock, routed for demo reliability.',
+          'Wiring harness - Pi power/data, mic USB (XMOS port), Seeeduino for pan-tilt/knock, routed for demo reliability.',
       },
       {
         src: '/projects/heimdall/thermal-pantilt.jpg',
@@ -58,10 +58,10 @@ export const projects = [
       },
       {
         src: '/projects/heimdall-tag-board.jpg',
-        caption: 'ESP32 Tag prototype — Grove sensors, SOS button, touch pads.',
+        caption: 'ESP32 Tag prototype - Grove sensors, SOS button, touch pads.',
       },
     ],
-    role: 'Hardware integration lead — Team 31 (pantilt / thermal / station build)',
+    role: 'Hardware integration lead - Team 31 (pantilt / thermal / station build)',
     timeline: 'Fall 2026 · Code Metal Forge · Finalist (Top 5 of 32)',
   },
   {
@@ -70,17 +70,17 @@ export const projects = [
     title: 'Cordganizer',
     category: 'CIM · Robotics · Production Planning',
     description:
-      'Automated cell that machines and assembles a two-piece Cordganizer from raw stock using UR arms, Haas mills, AGVs, and conveyor — with BUMES scripts timed to keep the bottleneck mill fed.',
+      'Automated cell that machines and assembles a two-piece Cordganizer from raw stock using UR arms, Haas mills, AGVs, and conveyor - with BUMES scripts timed to keep the bottleneck mill fed.',
     problem:
       'In BU’s ADML cell, lid and body blanks have to move through inventory, conveyor, robot tenders (Mary / Edie / Rosie), two mill programs, and final assembly without deadlocking shared resources. Idle mill time kills throughput; releasing a robot too early collides with an unfinished cut.',
     decisions:
-      'Lid (A/C) and body (B/D) run as separate parallel processes. Within each process, tasks stay sequential; across processes they overlap after startupTasksComplete() so the next lot can enter while the first is still machining.\n\nResource seize/release is explicit: seize Mary only for load/unload, release her during the mill cut so she can move a finished lid while Cayenne is still cutting. Unload waits on the mill program finishing — annotated as a hard safety boundary in the BUMES script.\n\nRouting analysis rounded steps to 10 s, counted empty pallets as WIP, and flagged body machining at 340 s / utilization 1.00 as the cell bottleneck.',
+      'Lid (A/C) and body (B/D) run as separate parallel processes. Within each process, tasks stay sequential; across processes they overlap after startupTasksComplete() so the next lot can enter while the first is still machining.\n\nResource seize/release is explicit: seize Mary only for load/unload, release her during the mill cut so she can move a finished lid while Cayenne is still cutting. Unload waits on the mill program finishing - annotated as a hard safety boundary in the BUMES script.\n\nRouting analysis rounded steps to 10 s, counted empty pallets as WIP, and flagged body machining at 340 s / utilization 1.00 as the cell bottleneck.',
     build:
       'I wrote and annotated BUMES scripts for lid and body: AGV + Rosie move empty pallets onto the conveyor, Mary/Edie pull blanks from gravity feeders, load Haas toolpaths (MakeLid / MakeBody), unload, stage inventory, and hand off to Rosie for AssembleAToB.\n\nOn Mary’s Polyscope pendant I built the local UR program (thu8am_lab1): MoveJ to pHome / invA, MoveL approaches, Set DO[0] for the gripper, and beginForceSeek with If force() ≤ 65 so contact is sensed instead of hoping position alone seats the part. Program loops forever on the real robot for cell demos.\n\nEpoch-timestamped BUMES reports logged every resourceSeize / urDashboard call so we could measure task times against the routing diagram.',
     result:
       'Body machining was the clear bottleneck (340 s, utilization 1.0). Assembly took 130 s once both parts arrived. Force-seek on Mary kept press-fit assembly stable when fixture tolerance drifted.',
     technical:
-      'Polyscope structure: Stack folders for palletize waypoints (StartPos / FromPos / ToPos), boolean part_found, Wait: 1.0 s settling, digital outputs for tooling, and force thresholding at 65 (UR force units) before committing the press. BUMES only calls urDashboard(.urp) after the matching resourceSeize — the pendant program owns the force logic.',
+      'Polyscope structure: Stack folders for palletize waypoints (StartPos / FromPos / ToPos), boolean part_found, Wait: 1.0 s settling, digital outputs for tooling, and force thresholding at 65 (UR force units) before committing the press. BUMES only calls urDashboard(.urp) after the matching resourceSeize - the pendant program owns the force logic.',
     tools: [
       'BUMES',
       'UR Polyscope',
@@ -93,7 +93,7 @@ export const projects = [
     videos: [
       {
         src: '/projects/cordganizer/assembly.mp4',
-        label: 'Robotic assembly sequence — lid to body',
+        label: 'Robotic assembly sequence - lid to body',
       },
       {
         src: '/projects/cordganizer/machining.mp4',
@@ -104,7 +104,7 @@ export const projects = [
       {
         src: '/projects/cordganizer/mary.jpg',
         caption:
-          'Mary’s teach pendant — Polyscope program with MoveJ/MoveL, DO gripper control, and beginForceSeek / force() ≤ 65.',
+          'Mary’s teach pendant - Polyscope program with MoveJ/MoveL, DO gripper control, and beginForceSeek / force() ≤ 65.',
       },
       {
         src: '/projects/cordganizer/machine-still.jpg',
@@ -113,7 +113,7 @@ export const projects = [
       {
         src: '/projects/cordganizer/routing-diagram.png',
         caption:
-          'Routing diagram with step times and utilizations — body machining marked as bottleneck.',
+          'Routing diagram with step times and utilizations - body machining marked as bottleneck.',
       },
       {
         src: '/projects/cordganizer/bumes-lid-script.png',
@@ -142,7 +142,7 @@ export const projects = [
     build:
       'Base and lid were programmed in Fusion Manufacture: face, 2D adaptive / offset roughing, contour, bore, and chamfer ops (separate setups for Base_v2_CAM and lid). Simulated both, then cut HDPE on Haas mills. Cell used three UR5 stations, two mills, and conveyor for tending and assembly.',
     result:
-      'Finished HDPE assemblies with carabiner cutouts and mating features sized for vise + gripper — validated in CAM comparison mode and on the physical cell.',
+      'Finished HDPE assemblies with carabiner cutouts and mating features sized for vise + gripper - validated in CAM comparison mode and on the physical cell.',
     technical:
       'Lid setup example: Face → Adaptive Roughing → Offset Roughing → Contour ×3 → Chamfer. Base setup: Face → Offset Roughing → Bore → Chamfer. Stock comparison colorization in simulation catches leftover material before a tool crashes the vise.',
     tools: [
@@ -160,11 +160,11 @@ export const projects = [
       },
       {
         src: '/projects/epic-box/base-simulation.mp4',
-        label: 'Fusion CAM simulation — Base_v2_CAM (Face, Offset Roughing, Bore, Chamfer)',
+        label: 'Fusion CAM simulation - Base_v2_CAM (Face, Offset Roughing, Bore, Chamfer)',
       },
       {
         src: '/projects/epic-box-lid-simulation.mov',
-        label: 'Fusion CAM simulation — lid toolpath',
+        label: 'Fusion CAM simulation - lid toolpath',
       },
     ],
     images: [
@@ -175,7 +175,7 @@ export const projects = [
       {
         src: '/projects/epic-box-machined.jpg',
         caption:
-          'Machined HDPE assembly with carabiner cutout — designed around vise and gripper geometry.',
+          'Machined HDPE assembly with carabiner cutout - designed around vise and gripper geometry.',
       },
       {
         src: '/projects/epic-box-cad-assembly.jpg',
@@ -195,15 +195,15 @@ export const projects = [
     title: 'Threshold',
     category: 'Hackathon · Health Data',
     description:
-      'Eligibility linter and patient finder across 1,011 recruiting Massachusetts cancer trials. 2nd Place — Health & Biotech at Hackachusetts × DS+X.',
+      'Eligibility linter and patient finder across 1,011 recruiting Massachusetts cancer trials. 2nd Place - Health & Biotech at Hackachusetts × DS+X.',
     problem:
-      'Trial protocols copy exclusions forward. Rules like “known HIV infection” or “must speak English” often are not science — they shut people out before anyone looks at their cancer. Protocol teams rarely see how often each rule appears or what it costs by county.',
+      'Trial protocols copy exclusions forward. Rules like “known HIV infection” or “must speak English” often are not science - they shut people out before anyone looks at their cancer. Protocol teams rarely see how often each rule appears or what it costs by county.',
     decisions:
       'Treat eligibility as a linter problem: extract restriction types from ClinicalTrials.gov free text, score them against FDA / guidance citations, and put rates next to CDC PLACES health and MassGIS environmental-justice layers.\n\nScreens: Landscape (13 restriction categories × 1,011 trials), Map (county rates + “who gets turned away” walkthrough), Linter (Claude or in-browser keyword rules), Find Trials (patient-side prototype).',
     build:
-      'I led front-end and UI design for the Next.js dashboard — landscape bars, county map panel, linter layout, and patient finder. Built in ~11 hours with Andria Chen, Arush Vyas, and Namig Mirzayev.\n\nExtraction used the same prompt path as the offline corpus; every flag must quote the criteria word-for-word before it shows. Keyword-rules mode keeps confidential drafts in-browser.',
+      'I led front-end and UI design for the Next.js dashboard - landscape bars, county map panel, linter layout, and patient finder. Built in ~11 hours with Andria Chen, Arush Vyas, and Namig Mirzayev.\n\nExtraction used the same prompt path as the offline corpus; every flag must quote the criteria word-for-word before it shows. Keyword-rules mode keeps confidential drafts in-browser.',
     result:
-      'Held-out set (10 trials labeled blind after prompt tuning): 46/50 restrictions caught (recall 92%), 46/47 flags correct (precision 98%), F1 0.95. Across the corpus: 22% of phase 1–3 drug trials still exclude HIV outright; ~30% of supportive-care studies require a specific language. 2nd Place, Health & Biotech.',
+      'Held-out set (10 trials labeled blind after prompt tuning): 46/50 restrictions caught (recall 92%), 46/47 flags correct (precision 98%), F1 0.95. Across the corpus: 22% of phase 1-3 drug trials still exclude HIV outright; ~30% of supportive-care studies require a specific language. 2nd Place, Health & Biotech.',
     technical:
       'Human-labeled answer key on 42 trials (seeded sample by phase/sponsor/cancer + held-out 10). Weakest category called out openly (prior malignancy recall ~72% on the full 42). Data: ClinicalTrials.gov API v2, CDC PLACES 2023, MassGIS EJ 2020. Live app: patient-eligibility-linter.vercel.app.',
     tools: [
@@ -218,25 +218,25 @@ export const projects = [
     images: [
       {
         src: '/projects/threshold/main.png',
-        caption: 'Threshold — Fair eligibility. More possibility.',
+        caption: 'Threshold - Fair eligibility. More possibility.',
       },
       {
         src: '/projects/threshold/landscape-desktop.png',
         caption:
-          'Desktop Landscape — restriction rates across 1,011 MA cancer trials (HIV callout 34.3%).',
+          'Desktop Landscape - restriction rates across 1,011 MA cancer trials (HIV callout 34.3%).',
       },
       {
         src: '/projects/threshold/map-desktop.png',
         caption:
-          'Desktop Map — county HIV restriction % with Suffolk detail (945 recruiting trials).',
+          'Desktop Map - county HIV restriction % with Suffolk detail (945 recruiting trials).',
       },
       {
         src: '/projects/threshold/linter-desktop.png',
         caption:
-          'Desktop Criteria linter — paste inclusion/exclusion, Claude or keyword engine.',
+          'Desktop Criteria linter - paste inclusion/exclusion, Claude or keyword engine.',
       },
     ],
-    role: 'Front-end and UI design lead — Team Threshold',
+    role: 'Front-end and UI design lead - Team Threshold',
     timeline: 'Fall 2026 · Hackachusetts × DS+X · 2nd Place, Health & Biotech',
   },
   {
@@ -245,7 +245,7 @@ export const projects = [
     title: 'Thermocapillary Thin Film Research',
     category: 'Research · Optics · Fluids',
     description:
-      'Underwater silicone-oil thin film coupled to an optical fiber — IR heating drives thermocapillary thickness change that steers guided green light.',
+      'Underwater silicone-oil thin film coupled to an optical fiber - IR heating drives thermocapillary thickness change that steers guided green light.',
     problem:
       'A free underwater oil film wants to rupture or thicken unevenly. Without a stable film, there is no waveguide to heat, and no optical steering to measure.',
     decisions:
@@ -253,7 +253,7 @@ export const projects = [
     build:
       'Current work: surfactant trials, film formation troubleshooting, fiber coupling, and hardware for holding the underwater film without killing the optical path.',
     result:
-      'Ongoing lab project — success metric is a repeatable film that holds long enough for IR-driven beam steering measurements.',
+      'Ongoing lab project - success metric is a repeatable film that holds long enough for IR-driven beam steering measurements.',
     tools: [
       'Optics',
       'Thin films',
@@ -277,8 +277,8 @@ export const projects = [
         caption: 'Side view of the underwater tank and fixture.',
       },
     ],
-    role: 'Research Assistant — Applied Interfacial Phenomena Lab',
-    timeline: 'September 2025 — Present',
+    role: 'Research Assistant - Applied Interfacial Phenomena Lab',
+    timeline: 'September 2025 - Present',
   },
   {
     id: 'microlens-nanoscribe',
@@ -286,17 +286,17 @@ export const projects = [
     title: 'Fluidically Shaped Microlenses',
     category: 'Microfabrication · Optics · Fluidic Shaping',
     description:
-      'Nanoscribe-printed frames and stamps set precise boundaries; microlenses are formed by fluidic shaping — deploying polymers such as RT and Vedarosa in density-matched liquids (Frumkin method), not by printing the optic itself.',
+      'Nanoscribe-printed frames and stamps set precise boundaries; microlenses are formed by fluidic shaping, deploying polymers such as RT and Vedarosa in density-matched liquids rather than printing the optic itself.',
     problem:
-      'Smooth optical surfaces at micro scale are hard to get from direct additive manufacturing. Ordinary prints leave stair-steps and roughness; polishing each tiny lens is not a process. Fluidic shaping can make optical-quality free surfaces — but only if the bounding frame pins the liquid with accurate geometry.',
+      'Smooth optical surfaces at micro scale are hard to get from direct additive manufacturing. Ordinary prints leave stair-steps and roughness; polishing each tiny lens is not a process. Fluidic shaping can make optical-quality free surfaces, but only if the bounding frame pins the liquid with accurate geometry.',
     decisions:
-      'Split the stack: Nanoscribe two-photon polymerization builds the rigid frame/stamp (rings, pads, arrays) that define pinning lines and apertures. The lens body is shaped as a liquid polymer volume under near-neutral buoyancy in an immiscible immersion liquid, then cured — following Valeri Frumkin’s fluidic-shaping approach. Density matching cancels gravity so surface tension and the frame geometry set the optic.\n\nCompleted 9+ hours of Nanoscribe training before unsupervised runs so fixture prints are repeatable, not one-offs.',
+      'Split the stack: Nanoscribe two-photon polymerization builds the rigid frame/stamp (rings, pads, arrays) that define pinning lines and apertures. The lens body is shaped as a liquid polymer volume under near-neutral buoyancy in an immiscible immersion liquid, then cured. Density matching cancels gravity so surface tension and the frame geometry set the optic. This fluidic-shaping approach builds on research by my PI, Valeri Frumkin (including work from his postdoc).\n\nCompleted 9+ hours of Nanoscribe training before unsupervised runs so fixture prints are repeatable, not one-offs.',
     build:
       'CAD fixtures for two-photon printability; parameter sweeps and resin choice for frame fidelity; microscope inspection of pin edges and apertures. On the wet bench: density-matched immersion baths, inject/aspirate curable polymers (e.g. RT, Vedarosa) into the printed boundaries, cure, and compare polymers for lens forming at the fluid interface.',
     result:
-      'Working frame/stamp prints plus fluidically shaped microlenses for the interfacial optics workstream — optics from liquid interfaces, structure from Nanoscribe.',
+      'Working frame/stamp prints plus fluidically shaped microlenses for the interfacial optics workstream: optics from liquid interfaces, structure from Nanoscribe.',
     technical:
-      'In Frumkin fluidic shaping, a curable lens liquid is pinned in a bounding frame submerged in an immersion liquid of matched density. Neutral buoyancy removes gravity; injected volume + frame geometry set spherical/aspherical caps; curing locks nanometric surface quality without mechanical polishing. My Nanoscribe parts are those bounding frames — not the cured lens volume.',
+      'In fluidic shaping, a curable lens liquid is pinned in a bounding frame submerged in an immersion liquid of matched density. Neutral buoyancy removes gravity; injected volume and frame geometry set spherical or aspherical caps; curing locks nanometric surface quality without mechanical polishing. My Nanoscribe parts are those bounding frames, not the cured lens volume.',
     tools: [
       'Nanoscribe (fixtures)',
       'Fluidic shaping',
@@ -311,7 +311,7 @@ export const projects = [
       {
         src: '/projects/microlense1.JPG',
         caption:
-          'Nanoscribe-printed microstructure used as a frame/stamp for fluidic lens forming — not the optic itself.',
+          'Nanoscribe-printed microstructure used as a frame/stamp for fluidic lens forming, not the optic itself.',
       },
       {
         src: '/projects/microlense2.JPG',
@@ -330,8 +330,8 @@ export const projects = [
         caption: 'NanoWrite interface during a multi-feature fixture print job.',
       },
     ],
-    role: 'Research Assistant — Applied Interfacial Phenomena Lab',
-    timeline: 'September 2025 — Present',
+    role: 'Research Assistant - Applied Interfacial Phenomena Lab',
+    timeline: 'September 2025 - Present',
   },
   {
     id: 'rhythm-game',
@@ -339,9 +339,9 @@ export const projects = [
     title: 'Electromechanical Rhythm Game',
     category: 'Mechatronics · Product Design',
     description:
-      'Rhythm Punch turns Guitar Hero-style tracks into physical notes — solenoids pop buttons up; limit switches score the hits.',
+      'Rhythm Punch turns Guitar Hero-style tracks into physical notes - solenoids pop buttons up; limit switches score the hits.',
     detailedDescription:
-      'Instead of notes only on a screen, solenoids physically raise buttons in sync with the track while limit switches detect hits and update score.\n\nI owned CAD layout and mechanical packaging: laser-cut housing, 3D-printed buttons, MOSFET-driven solenoids, LED matrix, speakers, and display. Early cardboard prototypes failed tolerance; the final enclosure fixed mounting, wiring baseplate, and control-panel placement.\n\nTesting showed stronger actuation than release — electromagnetic pull vs spring return — which set the cutoff timing for short notes.',
+      'Instead of notes only on a screen, solenoids physically raise buttons in sync with the track while limit switches detect hits and update score.\n\nI owned CAD layout and mechanical packaging: laser-cut housing, 3D-printed buttons, MOSFET-driven solenoids, LED matrix, speakers, and display. Early cardboard prototypes failed tolerance; the final enclosure fixed mounting, wiring baseplate, and control-panel placement.\n\nTesting showed stronger actuation than release - electromagnetic pull vs spring return - which set the cutoff timing for short notes.',
     tools: [
       'CAD',
       'Arduino',
@@ -408,7 +408,7 @@ export const projects = [
       prototypeIteration:
         'First prototype: cardboard and tape, poor tolerance. Final version: measured fits, better panel placement, 3D-printed buttons.',
       testingResults:
-        'Switch reliability and short-note actuation were the gates. Actuation outperformed release because pull is electromagnetic and return is spring — that set timing cutoffs.',
+        'Switch reliability and short-note actuation were the gates. Actuation outperformed release because pull is electromagnetic and return is spring - that set timing cutoffs.',
       testingImage: '/projects/rhythm-game-testing.jpg',
       contribution:
         'CAD layout, mechanical packaging, laser-cut structure, button/interface integration, and physical assembly.',
@@ -424,7 +424,7 @@ export const projects = [
     title: 'Musical Four-Bar Linkage',
     category: 'CAD · Kinematics · Laser Cutting',
     description:
-      'Crank-rocker four-bar with laser-cut musical-note links — modeled and assembled in SolidWorks (Assem_final), then cut from DXF.',
+      'Crank-rocker four-bar with laser-cut musical-note links - modeled and assembled in SolidWorks (Assem_final), then cut from DXF.',
     problem:
       'A four-bar is easy to draw and hard to get right: wrong link lengths lock, branch flips, or the transmission angle collapses. I wanted a mechanism that was both a valid Grashof crank-rocker and a laser-cuttable set of musical shapes.',
     decisions:
@@ -445,10 +445,10 @@ export const projects = [
     videos: [
       {
         src: '/projects/four-bar/assembly.mp4',
-        label: 'Assem_final — SolidWorks motion / assembly view',
+        label: 'Assem_final - SolidWorks motion / assembly view',
       },
     ],
-    role: 'CAD course project — ME357',
+    role: 'CAD course project - ME357',
     timeline: 'Fall 2025 · Boston University',
   },
   {
@@ -457,7 +457,7 @@ export const projects = [
     title: 'Gearbox CAD Design',
     category: 'Mechanical Design · CAD',
     description:
-      'Full gearbox assembly in SolidWorks — gears, shafts, housing, and packaging with assembly constraints that actually mate.',
+      'Full gearbox assembly in SolidWorks - gears, shafts, housing, and packaging with assembly constraints that actually mate.',
     problem:
       'A gearbox model is useless if shafts float, gears don’t mesh on centers, or the housing can’t close around the stack.',
     decisions:
@@ -484,11 +484,11 @@ export const projects = [
     title: 'Room Temperature Monitoring System',
     category: 'Electronics · Embedded',
     description:
-      'Portable Arduino + TMP36 monitor with LCD readout and LED/buzzer alerts outside 70–80°F, in a laser-cut / 3D-printed enclosure.',
+      'Portable Arduino + TMP36 monitor with LCD readout and LED/buzzer alerts outside 70-80°F, in a laser-cut / 3D-printed enclosure.',
     problem:
       'A breadboard thermometer isn’t something you leave in a room. It needed a real enclosure, a clear display, and an obvious alert when temperature drifts.',
     decisions:
-      'TMP36 into Arduino for the reading, LCD for the human, threshold logic for 70–80°F with LED + buzzer so you don’t have to stare at the screen.',
+      'TMP36 into Arduino for the reading, LCD for the human, threshold logic for 70-80°F with LED + buzzer so you don’t have to stare at the screen.',
     build:
       'Sensor circuit, firmware for convert/display/alert, and a custom enclosure to hold the board and make it portable.',
     result:

@@ -3,7 +3,7 @@ dist
 .DS_Store
 *.local
 
-# Original phone dumps — too large for GitHub; site uses compressed copies under public/projects/*/
+# Original phone dumps - too large for GitHub; site uses compressed copies under public/projects/*/
 public/projects/cordganizer-machining-sequence.MOV
 public/projects/cordganizer-assembly.MOV
 public/projects/heimdall-demo.mov

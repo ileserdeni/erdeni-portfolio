@@ -10,7 +10,7 @@ export default function Experience() {
       className="border-t border-border-subtle py-24 sm:py-28"
     >
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
-        <SectionHeading label="03 — Experience" title="Where I've worked" />
+        <SectionHeading label="03 / Experience" title="Where I've worked" />
 
         <div className="relative">
           <div className="absolute left-[7px] top-2 hidden h-[calc(100%-16px)] w-px bg-border sm:block" />

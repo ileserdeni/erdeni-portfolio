@@ -41,7 +41,7 @@ export default function FourBarInteractive() {
           3D assembly · Assem_final
         </p>
         <p className="mt-1 text-sm text-zinc-400">
-          SolidWorks model — drag to orbit, scroll to zoom
+          SolidWorks model - drag to orbit, scroll to zoom
         </p>
       </div>
 

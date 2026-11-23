@@ -15,7 +15,7 @@ export default function About() {
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <div className="flex flex-col gap-10 lg:grid lg:grid-cols-[minmax(0,1fr)_min(300px,32%)] lg:items-start lg:gap-x-14 lg:gap-y-12">
           <div className="order-1">
-            <SectionHeading label="01 — About" title="Building systems with intent" />
+            <SectionHeading label="01 / About" title="Building systems with intent" />
 
             <p className="max-w-3xl text-base leading-relaxed text-muted sm:text-lg sm:leading-relaxed">
               I am a Mechanical Engineering student at Boston University interested
